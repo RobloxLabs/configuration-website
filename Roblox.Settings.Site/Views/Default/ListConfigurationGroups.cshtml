@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "ListConfigurationGroups";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model PaginationViewModel<string>
+
+<div class="container-fluid body-content">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Configuration Groups
+            <div class="pull-right">@($"{DateTime.Now:MM/dd/yyyy hh:mm:ss tt} {TimeZone.CurrentTimeZone.StandardName}")</div>
+        </div>
+        <div class="panel-body">
+            <div id="select2help" class="glyphicon glyphicon-question-sign" style="display: inline-block; float: right; font-size: 24px;"></div>
+            <div id="select2help-details" class="select2help-popover" style="display: none; padding-bottom: 40px;">
+                <h2>Title</h2>
+                Test Test Test
+                <h2 style="margin-top: 10px;">Another Title</h2>
+                More Testing!!!
+            </div>
+        </div>
+    </div>
+
+    <table id="configuration-groups-list" class="table table-striped table-condensed not-too-small">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Settings Count</th>
+                <th>Connection Strings Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    @Html.Partial(
+                        "~/Views/Configuration/ConfigurationGroupElement.cshtml",
+                        new ConfigurationGroupElementViewModel
+                        {
+                            ID = i,
+                            Name = Model.Items.ElementAt(i),
+                            Settings = 0,
+                            ConnectionStrings = 0
+                        }
+                    );
+                }
+            }
+        </tbody>
+    </table>
+
+    <!-- TODO: Pagination section -->
+</div>
+
+@Scripts.Render("~/bundles/base")
+<script>
+    $(function () {
+        Roblox.select2helpers.setupStandardSelect2s();
+        Roblox.select2helpers.setupHelp();
+    })
+</script>
