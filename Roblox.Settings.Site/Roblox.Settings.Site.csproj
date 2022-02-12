@@ -235,20 +235,15 @@
     <Content Include="Views\Shared\PlaceHolder.cshtml" />
     <Content Include="Views\Default\ListConfigurationGroups.cshtml" />
     <Content Include="Views\Config\ConfigGroupElement.cshtml" />
-    <Content Include="Views\SettingsOld\ListSettings.cshtml" />
-    <Content Include="Views\SettingsOld\SettingRow.cshtml" />
     <Content Include="Views\Settings\Search.cshtml" />
     <Content Include="Views\Settings\Dialog.cshtml" />
     <Content Include="Views\Settings\Table.cshtml" />
     <Content Include="Views\Settings\Row.cshtml" />
     <Content Include="Views\Config\GroupNamesArrayScript.cshtml" />
-    <Content Include="Views\ConnectionStrings\Dialog.cshtml" />
-    <Content Include="Views\ConnectionStrings\Row.cshtml" />
-    <Content Include="Views\ConnectionStrings\Search.cshtml" />
-    <Content Include="Views\ConnectionStrings\Table.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Shared\" />
+    <Folder Include="Views\ConnectionStrings\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
