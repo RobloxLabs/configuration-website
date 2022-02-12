@@ -82,7 +82,7 @@ namespace Roblox.Settings.Site.Controllers
                 Id = id,
                 GroupName = "Roblox.Test.Properties.Settings",
                 Name = "Roblox Test Setting #" + id.ToString(),
-                Type = "System.String",
+                Type = "Roblox.Configuration.WeightedCsv",
                 Value = "String Value # " + id.ToString(),
                 Comment = "Comment comment blah blah blah...",
                 IsEnvironmentSpecific = false,
