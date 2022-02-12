@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Roblox.Settings.Site.Models.Configuration.ConfigGroupModel>
+
+<script type="text/javascript">
+    var groupNames = [
+        @foreach (var configGroup in Model)
+        {
+            @:"@configGroup.Name",
+        }
+    ];
+</script>

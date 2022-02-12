@@ -1,0 +1,113 @@
+﻿
+<div id="settingsDialog" class="configDialog">
+    <div id="dlgShutdownSettingWarning" class="ui-state-error">
+        <p class="ui-state-error-text">
+            <b>Warning</b>: Modifying this setting may shutdown something <b>big</b>!
+        </p>
+    </div>
+    <div id="dlgRestrictedSettingWarning" class="ui-state-error">
+        <p class="ui-state-error-text" style="margin: 1em 0;">
+            Warning: This setting is restricted. Please be careful!
+        </p>
+    </div>
+    <table id="dialogFieldTable">
+        <tbody>
+            <tr><td>@Html.Label("dlgName", "Name: ")</td><td>@Html.TextBox("dlgName")</td></tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div id="dlgNameMessage" class="ui-state-error ui-corner-all">
+                        <p class="ui-state-error-text">
+                            Error: Only alphanumeric characters are allowed.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+            <tr><td>@Html.Label("dlgType", "Type: ")</td><td>@Html.TextBox("dlgType")</td></tr>
+
+            <tr><td>@Html.Label("dlgOriginal", "Original: ")</td><td><span id="dlgValueOriginal"></span></td></tr>
+
+            <tr><td>@Html.Label("dlgValue", "Value: ", new { @class = "error" })</td><td>@Html.TextBox("dlgValue")</td></tr>
+            <tr class="helperRow">
+                <td>
+                    <div class="timeSpan" hidden>
+                        <input id="dlgDays" type="number" />
+                        <input id="dlgHours" type="number" />
+                        <input id="dlgMinutes" type="number" />
+                        <input id="dlgSeconds" type="number" />
+                        <input id="dlgMilliseconds" type="number" />
+                    </div>
+                    <div id="redisEndpoints">
+                        <a href="javascript:;" id="dlgRedisEndpointsAddRow" class="ui-icon ui-icon-plus" style="display: inline-block;"></a>
+                        <a href="javascript:;" id="dlgRedisEndpointsValidate" class="ui-icon ui-icon-check pull-left"></a>
+                        <span id="dlgRedisEndpointsMessage"></span>
+                        <span id="dlgRedisEndpointsWarning"></span>
+                        <div id="dlgRedisEndpointsInputs"></div>
+                    </div>
+                    <div class="csv">
+                        <a href="javascript:;" id="csvAddButton" class="ui-icon ui-icon-plus"></a>
+                        <div id="csvInputs"></div>
+                    </div>
+                    <div id="weightedCsv">
+                        <a href="javascript:;" id="dlgWeightedCsvAddRow" class="ui-icon ui-icon-plus" style="display: inline-block;"></a>
+                        <a href="javascript:;" id="dlgWeightedCsvValidate" class="ui-icon ui-icon-check pull-left"></a>
+                        <span id="dlgWeightedCsvMessage"></span>
+                        <span id="dlgWeightedCsvWarning"></span>
+                        <div id="dlgWeightedCsvInputs"></div>
+                    </div>
+                    <div class="boolean">
+                        <input type="radio" name="booleanRadio" id="true-radio" />
+                        <input type="radio" name="booleanRadio" id="false-radio" />
+                    </div>
+                    <div class="number">
+                        <input type="number" class="numberInput" />
+                    </div>
+                    <div class="guid">
+                        @* TODO: Straight up doesn't work due to something with the JS. Maybe never used/tested? *@
+                        @Html.CheckBox("removeGuidHyphens")
+                        <input id="guidInput1" type="text" maxlength="8" />
+                        -
+                        <input id="guidInput2" type="text" maxlength="4" />
+                        -
+                        <input id="guidInput3" type="text" maxlength="4" />
+                        -
+                        <input id="guidInput4" type="text" maxlength="4" />
+                        -
+                        <input id="guidInput5" type="text" maxlength="32" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div id="dlgValueMessage" class="ui-state-error ui-corner-all">
+                        <p class="ui-state-error-text">
+                            Error: No unenclosed whitespace is allowed.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+            <tr><td>@Html.Label("dlgModified", "Modified: ")</td><td>@Html.TextBox("dlgModified")</td></tr>
+
+            <tr><td>@Html.Label("dlgGroup", "Group: ")</td> <td>@Html.TextBox("dlgGroup")</td></tr>
+
+            <tr><td>@Html.Label("dlgComment", "Comment: ")</td><td>@Html.TextBox("dlgComment")</td></tr>
+        </tbody>
+    </table>
+
+    <table id="dialogCheckBoxTable" style="border-spacing: 10px 0px;">
+        <tbody>
+            <tr><td>@Html.Label("dlgIsEnvSpecific", "Env-Specific")</td><td>@Html.Label("dlgIsMasked", "Masked")</td></tr>
+            <tr><td>@Html.CheckBox("dlgIsEnvSpecific")</td><td>@Html.CheckBox("dlgIsMasked")</td></tr>
+
+            <tr class="hiddenRow">
+                <td>
+                    @Html.CheckBox("dlgIsValueSameForAllTestEnvironments")
+                    @Html.CheckBox("dlgIsValueUniqueForProduction")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

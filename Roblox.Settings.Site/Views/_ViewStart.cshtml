@@ -1,0 +1,8 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewContext.ViewBag.MachineID = Environment.MachineName;
+    ViewContext.ViewBag.Title = "ROBLOX Configuration";
+    ViewContext.ViewBag.ScriptBundleNames = new List<string>();
+    ViewContext.ViewBag.StyleBundleNames = new List<string>();
+    ViewContext.ViewBag.CurrentTimestamp = $"{DateTime.Now:M/d/yyyy h:mm:ss tt} CST";
+}

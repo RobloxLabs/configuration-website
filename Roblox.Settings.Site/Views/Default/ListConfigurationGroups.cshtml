@@ -1,0 +1,56 @@
+﻿@using PagedList.Mvc;
+@using Roblox.Settings.Site.Models.Configuration;
+@model PagedList.IPagedList<string>
+
+@{
+    ViewBag.Title = "Config Groups";
+    //ViewBag.ScriptBundleNames.Add("list-groups");
+    
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @ViewBag.Title
+        <div class="pull-right">@ViewBag.CurrentTimestamp</div>
+    </div>
+    <div class="panel-body">
+        <div id="select2help" class="glyphicon glyphicon-question-sign" style="display: inline-block; float: right; font-size: 24px;"></div>
+        <div id="select2help-details" class="select2help-popover" style="display: none; padding-bottom: 40px;">
+            <h2>Title</h2>
+            Test Test Test
+            <h2 style="margin-top: 10px;">Another Title</h2>
+            More Testing!!!
+        </div>
+    </div>
+</div>
+
+<table id="configuration-groups-list" class="table table-striped table-condensed not-too-small">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Settings Count</th>
+            <th>Connection Strings Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            for (int i = 0; i < Model.Count; i++)
+            {
+                @* This shouldn't use a separate partial view unless it's going to be used elsewhere. *@
+                @Html.Partial(
+                    "~/Views/Config/ConfigGroupElement.cshtml",
+                    new ConfigGroupModel
+                    {
+                        Id = i + (Model.PageNumber - 1) * Model.PageSize,
+                        Name = Model.ElementAt(i),
+                        Settings = 0,
+                        ConnectionStrings = 0
+                    }
+                );
+            }
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("ListConfigGroups", new { page }))

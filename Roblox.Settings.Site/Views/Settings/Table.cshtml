@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Roblox.Settings.Site.Models.Configuration.SettingModel>
+
+<table id="settingsResults" class="table settingsTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Actions</th>
+            <th>Group</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Comment</th>
+            <th>Modified</th>
+            <th>Environment-Specific</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.Partial("~/Views/Settings/Row.cshtml", item)
+        }
+    </tbody>
+</table>

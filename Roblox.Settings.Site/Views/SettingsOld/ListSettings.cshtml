@@ -1,0 +1,38 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Roblox.Settings.Site.Models.Configuration.SettingModel>
+
+@{
+    ViewBag.Title = "Index";
+    //ViewBag.ScriptBundleNames.Add("settings");
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateSetting")
+</p>
+<table id="settingsResults" class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Group Name</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Comment</th>
+            <th>Updated</th>
+            <th>Masked</th>
+            <th>Environment-Specific</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @Html.Partial("SettingRow", item)
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("ListSettings", new { page }))

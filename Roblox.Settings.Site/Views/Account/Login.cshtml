@@ -1,0 +1,39 @@
+﻿@{ 
+    Layout = null;
+}
+
+@model LoginViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta https-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Roblox Configuration 1.00</title>
+    @Styles.Render("~/Content/login")
+</head>
+<body class="login-page">
+    <form action="/Login" class="login-form" method="post">
+
+        @{ 
+            if (Model.ErrorMessage != null)
+            {
+                <div class="alert alert-danger error-message">@Model.ErrorMessage</div> 
+            } 
+        }
+
+        <input id="ReturnUrl" name="ReturnUrl" type="hidden" value="@Model.ReturnUrl" />
+
+        <div class="form-group">
+            <input class="form-control" placeholder="Username" name="UserName" type="text" autofocus />
+        </div>
+        <div class="form-group">
+            <input class="form-control" placeholder="Password" name="Password" type="password" />
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+    </form>
+</body>
+</html>
