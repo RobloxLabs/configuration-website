@@ -1,8 +1,4 @@
-﻿
-
-
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- @ViewBag.MachineID -->
 <html>
     <head>
@@ -12,10 +8,6 @@
         <title>@(ViewBag.Title != null ? $"{ViewBag.Title} - " : "")Roblox Configuration v1.00</title>
         <link rel="shortcut icon" href="/favicon.ico" />
         @Styles.Render("~/Content/css")
-        @foreach (string bundleName in ViewBag.StyleBundleNames)
-        {
-            @Styles.Render("~/bundles/" + bundleName);
-        }
     </head>
     <body>
         <div class="navbar navbar-default navbar-static-top">
@@ -68,9 +60,6 @@
         </div>
 
         @Scripts.Render("~/bundles/base")
-        @foreach (string bundleName in ViewBag.ScriptBundleNames)
-        {
-            @Scripts.Render("~/bundles/" + bundleName);
-        }
+        @RenderSection("scripts", false);
     </body>
 </html>

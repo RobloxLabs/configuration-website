@@ -1,9 +1,12 @@
 ﻿@model Roblox.Settings.Site.ViewModels.Configuration.ConfigListViewModel
 
+@section scripts {
+    @Scripts.Render("~/bundles/config")
+    @Styles.Render("~/bundles/config-styles")
+}
+
 @{
     ViewBag.Title = "Settings Search";
-    ViewBag.ScriptBundleNames.Add("config");
-    ViewBag.StyleBundleNames.Add("config-styles");
 }
 
 @Html.Partial("~/Views/Config/GroupNamesArrayScript.cshtml", Model.ConfigGroups)
