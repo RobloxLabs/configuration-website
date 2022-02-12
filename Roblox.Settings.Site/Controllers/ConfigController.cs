@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Roblox.Configuration;
 using Roblox.Settings.Site.Models.Configuration;
 
 namespace Roblox.Settings.Site.Controllers
@@ -203,7 +204,7 @@ namespace Roblox.Settings.Site.Controllers
 
         // POST: Config/ValidateWeightedCsv
         [HttpPost]
-        public ActionResult ValidateWeightedCsv(FormCollection collection)
+        public ActionResult ValidateWeightedCsv(string rawWeightedCsv)
         {
             var response = new ValidationResponseModel();
 
@@ -212,9 +213,18 @@ namespace Roblox.Settings.Site.Controllers
                 rawWeightedCsv
             */
 
-            // Do code stuff
             response.Success = true;
             response.Message = "Success!";
+
+            try
+            {
+                new WeightedCsv(rawWeightedCsv);
+            }
+            catch (WeightedCsvParseException ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
 
             return Json(response);
         }
