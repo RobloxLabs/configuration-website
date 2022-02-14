@@ -2,8 +2,8 @@
 
 <tr data-sid="@Model.Id">
     <td>@Model.Id</td>
-    <td class="a" style="width: 110px">
-        <div class="btn-group">
+    <td class="a">
+        <div class="btn-group" style="width: 60px">
             <button type="button" class="settingsEditButton btn btn-primary btn-xs">Edit</button>
             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
@@ -47,5 +47,4 @@
     </td>
     <td><div class="c">@Html.Encode(Model.Comment)</div></td>
     <td>@Html.DisplayFor(modelItem => Model.LastModified)</td>
-    <td>@Html.DisplayFor(modelItem => Model.IsEnvironmentSpecific)</td>
 </tr>
