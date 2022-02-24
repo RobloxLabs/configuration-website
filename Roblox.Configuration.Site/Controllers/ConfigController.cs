@@ -118,6 +118,10 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public ActionResult DeleteSettingAjax(FormCollection collection)
         {
+            // Error
+            //return Content("");
+
+            // Success
             return Content("Successfully deleted setting!");
         }
 

@@ -149,10 +149,15 @@ $(function () {
                 return updateSettingResultsMulti(handler);
             }
             $("#settingsResultsDiv").html("");
-            $("#settingsResultsDiv").on('click','.showSettingDiv', function () {
+            /**
+             * Previously used an "on" version of "live". Since moved to init...
+             * We were running this everytime we loaded the results which led to event binding getting stacked for all show setting buttons.
+             * AKA, infinite masked setting requests and or alerts (NOT GOOD!!)
+             */
+            /*$("#settingsResultsDiv").on('click','.showSettingDiv', function () {
                 var target = $(this).find(".showSettingButton");
                 showMaskedSetting(target);
-            });
+            });*/
             requestCounter++;
             var requestCount = requestCounter;
             var namePattern = $("#NamePattern").val();
@@ -344,7 +349,7 @@ $(function () {
 
                             var message = "<b>Setting Saved!</b><br>";
                             message += "<b>Setting Group</b>: " + params.group + "<br>";
-                            message += "<b>Setting Name:</b> " + params.name + "<br>";
+                            message += "<b>Setting Name</b>: " + params.name + "<br>";
                             if (response.Message !== undefined && response.Message !== "" && response.Message !== null) {
                                 message += "But there was an exception creating the system event for the change <br>";
                                 message += "Exception: " + response.Message+" <br>";
@@ -354,7 +359,7 @@ $(function () {
                             });
                         }
                         else {
-                            showAlert("<b>Error</b>: " + "Setting was NOT saved!<br>" + response.Message, "alert-danger");
+                            showAlert("<b>Setting was NOT saved!</b><br>" + response.Message, "alert-danger");
                         }
                         editSettingDialog.dialog("close");
                     });
@@ -644,6 +649,11 @@ $(function () {
                 ],
                 minLength: 0,
                 delay: 0,
+            });
+
+            $("#settingsResultsDiv").on('click', '.showSettingDiv', function () {
+                var target = $(this).find(".showSettingButton");
+                showMaskedSetting(target);
             });
 
             $(document).on("click", "#settingsResultsDiv .settingsEditButton", null, function () {
