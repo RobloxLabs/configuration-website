@@ -14,7 +14,7 @@ namespace Roblox.Configuration.Site.Controllers
     //[RoutePrefix("settings")]
     public class SettingsController : Controller
     {
-        // GET: Configuration/Search
+        // GET: Settings/Search
         [HttpGet]
         //[Route("list")]
         public ActionResult Search()

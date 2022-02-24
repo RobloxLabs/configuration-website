@@ -12,7 +12,7 @@ namespace Roblox.Configuration.Site.Controllers
     [RoutePrefix("Config")]
     public class ConfigController : Controller
     {
-        // GET: Config/GetSettingsHtmlAjax?groupName=Roblox.Properties.Configuration
+        // GET: Config/GetSettingsHtmlAjax?groupName=Roblox.Properties.Settings
         [HttpGet]
         public ActionResult GetSettingsHtmlAjax(string groupName, string namePattern, string valuePattern)
         {
@@ -36,7 +36,7 @@ namespace Roblox.Configuration.Site.Controllers
             return PartialView("~/Views/Settings/Table.cshtml", settings);
         }
 
-        // GET: Config/GetSetting?settingGroupName=Roblox.Properties.Configuration&settingName=TestSetting
+        // GET: Config/GetSetting?settingGroupName=Roblox.Properties.Settings&settingName=TestSetting
         [HttpGet]
         public ActionResult GetSetting(string settingGroupName, string settingName)
         {
@@ -55,7 +55,7 @@ namespace Roblox.Configuration.Site.Controllers
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Config/GetMaskedSetting?settingGroupName=Roblox.Properties.Configuration&settingName=TestSetting
+        // GET: Config/GetMaskedSetting?settingGroupName=Roblox.Properties.Settings&settingName=TestSetting
         [HttpGet]
         public ActionResult GetMaskedSetting(string settingGroupName, string settingName)
         {
