@@ -1,4 +1,4 @@
-﻿@model Roblox.Configuration.Site.Models.Configuration.SettingModel
+﻿@model Roblox.Configuration.Site.Clients.ConfigurationService.ISetting
 
 <tr data-sid="@Model.Id">
     <td>@Model.Id</td>
@@ -46,5 +46,5 @@
         </div>
     </td>
     <td><div class="c">@Html.Encode(Model.Comment)</div></td>
-    <td>@Html.DisplayFor(modelItem => Model.LastModified)</td>
+    <td>@Html.DisplayFor(modelItem => Model.Updated)</td>
 </tr>

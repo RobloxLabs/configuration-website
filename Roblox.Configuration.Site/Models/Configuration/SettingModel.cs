@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Roblox.Configuration.Site.Clients.ConfigurationService;
 
 namespace Roblox.Configuration.Site.Models.Configuration
 {
@@ -28,5 +29,22 @@ namespace Roblox.Configuration.Site.Models.Configuration
         public bool IsShutdownSetting { get; set; }
 
         public bool IsRestrictedSetting { get; set; }
+
+        public static implicit operator SettingModel(Setting s) => 
+            (
+                s == null ? null :
+                new SettingModel
+                {
+                    Id = s.Id,
+                    GroupName = s.GroupName,
+                    Name = s.Name,
+                    Type = s.Type,
+                    Value = s.Value,
+                    Comment = s.Comment,
+                    IsEnvironmentSpecific = s.IsEnvironmentSpecific,
+                    LastModified = s.Updated.ToString(),
+                    IsMasked = s.IsMasked
+                }
+            );
     }
 }

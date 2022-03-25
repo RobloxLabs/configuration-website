@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Roblox.Configuration.Site.Models.Configuration.ConfigGroupModel>
+﻿@model IEnumerable<string>
 
 <script type="text/javascript">
     var groupNames = [
-        @foreach (var configGroup in Model)
+        @foreach (var configGroupName in Model)
         {
-            @:"@configGroup.Name",
+            @:"@configGroupName",
         }
     ];
 </script>

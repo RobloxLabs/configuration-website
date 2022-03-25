@@ -152,6 +152,11 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Clients\ConfigurationService\ConfigurationClient.cs" />
+    <Compile Include="Clients\ConfigurationService\ConfigurationServiceErrorResponse.cs" />
+    <Compile Include="Clients\ConfigurationService\IConfigurationClient.cs" />
+    <Compile Include="Clients\ConfigurationService\ISetting.cs" />
+    <Compile Include="Clients\ConfigurationService\Setting.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
@@ -225,6 +230,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="App_Data\Configuration\Roblox.Authentication.config" />
     <Content Include="App_Data\Configuration\machinekey.config" />
+    <Content Include="App_Data\Configuration\Roblox.Configuration.Properties.EnvironmentSettings.config" />
     <None Include="packages.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <None Include="Properties\Settings.settings">
@@ -247,6 +253,10 @@
     <Folder Include="Views\ConnectionStrings\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Assemblies\ApiClientBase\Roblox.ApiClientBase\Roblox.ApiClientBase.csproj">
+      <Project>{dae6fab3-f9f4-444a-9235-644d5b97e360}</Project>
+      <Name>Roblox.ApiClientBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Assemblies\Configuration\Roblox.Configuration\Roblox.Configuration.csproj">
       <Project>{6316d070-7193-4f41-9b70-f13d6875563f}</Project>
       <Name>Roblox.Configuration</Name>

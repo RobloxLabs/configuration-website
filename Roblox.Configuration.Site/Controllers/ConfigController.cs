@@ -12,46 +12,22 @@ namespace Roblox.Configuration.Site.Controllers
     [RoutePrefix("Config")]
     public class ConfigController : Controller
     {
+
         // GET: Config/GetSettingsHtmlAjax?groupName=Roblox.Properties.Settings
         [HttpGet]
         public ActionResult GetSettingsHtmlAjax(string groupName, string namePattern, string valuePattern)
         {
-            int count = 200;
-            // Populate Configuration
-            var settings = new List<SettingModel>();
-            for (int i = 1; i <= count; i++)
-                settings.Add(new SettingModel
-                {
-                    Id = i,
-                    GroupName = "Roblox.Test.Properties.Settings",
-                    Name = "Roblox Test Setting #" + i.ToString(),
-                    Type = typeof(String).FullName,
-                    Value = "String Value # " + i.ToString(),
-                    Comment = "Comment comment blah blah blah...",
-                    IsEnvironmentSpecific = false,
-                    LastModified = DateTime.Now.ToString(),
-                    IsMasked = (i % 2 == 0) // Done to simulate masked value
-                });
-
-            return PartialView("~/Views/Settings/Table.cshtml", settings);
+            return PartialView("~/Views/Settings/Table.cshtml", MvcApplication.ConfigurationClient.GetSettings(groupName));
         }
 
         // GET: Config/GetSetting?settingGroupName=Roblox.Properties.Settings&settingName=TestSetting
         [HttpGet]
         public ActionResult GetSetting(string settingGroupName, string settingName)
         {
-            var settingModel = new SettingModel
-            {
-                Id = 1,
-                GroupName = settingGroupName,
-                Name = settingName,
-                Type = typeof(Boolean).FullName,
-                Value = "True",
-                Comment = "Comment comment blah blah blah...",
-                IsEnvironmentSpecific = false,
-                LastModified = DateTime.Now.ToString(),
-                IsMasked = false
-            };
+
+            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
+            if (settingModel == null)
+                return new HttpNotFoundResult("Setting not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -59,18 +35,7 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetMaskedSetting(string settingGroupName, string settingName)
         {
-            var settingModel = new SettingModel
-            {
-                Id = 1,
-                GroupName = settingGroupName,
-                Name = settingName,
-                Type = typeof(String).FullName,
-                Value = "Masked value ooo", // We technically only need to return Value for this
-                Comment = "This setting is masked",
-                IsEnvironmentSpecific = false,
-                LastModified = DateTime.Now.ToString(),
-                IsMasked = true
-            };
+            SettingModel settingModel = MvcApplication.ConfigurationClient.UnmaskSetting(settingGroupName, settingName);
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -78,20 +43,9 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetSettingAjax(int id)
         {
-            var settingModel = new SettingModel
-            {
-                Id = id,
-                GroupName = "Roblox.Test.Properties.Settings",
-                Name = "Roblox Test Setting #" + id.ToString(),
-                Type = "Roblox.Configuration.WeightedCsv",
-                Value = "String Value # " + id.ToString(),
-                Comment = "Comment comment blah blah blah...",
-                IsEnvironmentSpecific = false,
-                LastModified = DateTime.Now.ToString(),
-                IsMasked = false,
-                IsRestrictedSetting = false,
-                IsShutdownSetting = false
-            };
+            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(id);
+            if (settingModel == null)
+                return new HttpNotFoundResult("Setting with ID " + id + " not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -116,13 +70,16 @@ namespace Roblox.Configuration.Site.Controllers
 
         // POST: Config/DeleteSettingAjax
         [HttpPost]
-        public ActionResult DeleteSettingAjax(FormCollection collection)
+        public ActionResult DeleteSettingAjax(int? id)
         {
-            // Error
-            //return Content("");
+            if (id != null && MvcApplication.ConfigurationClient.Dele)
+            {
+                // Success
+                return Content("Successfully deleted setting!");
+            }
 
-            // Success
-            return Content("Successfully deleted setting!");
+            // Error
+            return Content("");
         }
 
         // POST: Config/SetSettingAjax

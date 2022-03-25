@@ -58,7 +58,8 @@ namespace Roblox.Configuration.Site.Controllers
             }
 #endif
 
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password)) return ShowError("Please fill out all fields.", returnUrl);
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                return ShowError("Please fill out all fields.", returnUrl);
 
             userName = GetUsername(userName);
 
