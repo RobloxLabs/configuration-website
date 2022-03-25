@@ -21,7 +21,7 @@ namespace Roblox.Configuration.Site.Controllers
         {
             var viewModel = new ConfigListViewModel
             {
-                ConfigGroupNames = MvcApplication.ConfigurationClient.GetGroupNames()
+                ConfigGroupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0)
             };
 
             return View(viewModel);

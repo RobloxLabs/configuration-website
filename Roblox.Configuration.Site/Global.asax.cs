@@ -8,8 +8,8 @@ namespace Roblox.Configuration.Site
 {
     public class MvcApplication : HttpApplication
     {
-        private static IConfigurationClient _ConfigurationClient;
-        public static IConfigurationClient ConfigurationClient
+        private static ConfigurationClient _ConfigurationClient;
+        public static ConfigurationClient ConfigurationClient
         {
             get { return _ConfigurationClient; }
         }

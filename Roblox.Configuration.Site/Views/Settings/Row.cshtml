@@ -1,4 +1,4 @@
-﻿@model Roblox.Configuration.Site.Clients.ConfigurationService.ISetting
+﻿@model Roblox.Configuration.Site.Clients.ConfigurationService.Setting
 
 <tr data-sid="@Model.Id">
     <td>@Model.Id</td>
@@ -21,15 +21,15 @@
     <td>
         <div class="valueCell">
             @* This is here because some genuis decided to use an entire endpoint to get this value, yet also require it to be provided here.*@
-            <span class="setting-value" hidden>@Html.Encode(Model.Value)</span>
-            <span class="value @(Model.IsMasked ? "secret" : "")" title="@Html.Encode(Model.Value)">
+            <span class="setting-value" hidden>@Model.Value</span>
+            <span class="value @(Model.IsMasked ? "secret" : "")" title="@Model.Value">
                 @if (Model.IsMasked)
                 {
                     @:[value not shown]
                 }
                 else
                 {
-                    @Html.Encode(Model.Value)
+                    @Model.Value
                 }
             </span>
             @if (Model.IsMasked)
@@ -39,12 +39,12 @@
                 </div>
             }
             <div class="copyValue @(Model.IsMasked ? "masked" : "")">
-                <a href="javascript:navigator.clipboard.writeText('@Html.Encode(Model.Value)')" title="@Html.Encode("Copy this:\n " + Model.Value)" class="copyIcon">
+                <a href="javascript:navigator.clipboard.writeText('@Model.Value')" title="@Html.Encode("Copy this:\n " + Model.Value)" class="copyIcon">
                     <span class="copyToClipboardIcon" />
                 </a>
             </div>
         </div>
     </td>
-    <td><div class="c">@Html.Encode(Model.Comment)</div></td>
+    <td><div class="c">@Model.Comment</div></td>
     <td>@Html.DisplayFor(modelItem => Model.Updated)</td>
 </tr>

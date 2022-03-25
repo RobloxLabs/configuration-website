@@ -1,259 +1,399 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Newtonsoft.Json;
 using Roblox.ApiClientBase;
 
 namespace Roblox.Configuration.Site.Clients.ConfigurationService
 {
-	/// <summary>
-	/// Client used to access the configuration service, pulled from Roblox/event-ingestor
-	/// </summary>
-	public class ConfigurationClient : ApiClientBase.ApiClientBase, IConfigurationClient
-	{
-		/// <inheritdoc />
-		public override Encoding Encoding
-		{
-			get
-			{
-				return null;
-			}
-		}
+    /// <summary>
+    /// Client used to access the configuration service
+    /// </summary>
+    public class ConfigurationClient : GuardedApiClientBase
+    {
+        /// <inheritdoc />
+        public override Encoding Encoding => null;
+        /// <summary>
+        /// Gets client name
+        /// </summary>
+        public override string Name => "ConfigurationApiClient";
+        /// <inheritdoc />
+        protected override string Endpoint => _EndpointGetter();
+        /// <inheritdoc />
+        protected override TimeSpan Timeout => TimeSpan.FromSeconds(6.0);
+        /// <inheritdoc />
+        protected override string ApiKey => _ApiKeyGetter?.Invoke();
 
-		/// <summary>
-		/// Gets client name
-		/// </summary>
-		public override string Name
-		{
-			get
-			{
-				return "ConfigurationApiClient";
-			}
-		}
+        protected override void OnRequestStarting() { }
 
-		/// <inheritdoc />
-		protected override string Endpoint
-		{
-			get
-			{
-				return this._EndpointGetter();
-			}
-		}
+        /// <summary>
+        /// Configuration client
+        /// </summary>
+        /// <param name="endpointGetter"></param>
+        /// <param name="sslVerificationEnabled"></param>
+        public ConfigurationClient(Func<string> endpointGetter, Func<string> apiKeyGetter = null, bool sslVerificationEnabled = true)
+        {
+            _EndpointGetter = endpointGetter;
+            _ApiKeyGetter = apiKeyGetter;
+            if (!sslVerificationEnabled) ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+        }
 
-		/// <inheritdoc />
-		protected override TimeSpan Timeout
-		{
-			get
-			{
-				return TimeSpan.FromSeconds(6.0);
-			}
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructCreateConnectionStringRequest(string groupName, string connectionStringName, string value, DateTime created)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("connectionStringName", connectionStringName);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("created", created);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		protected override string ApiKey
-		{
-			get
-			{
-				return null;
-			}
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSetConnectionStringRequest(string groupName, string connectionStringName, string value, DateTime updated)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("connectionStringName", connectionStringName);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("updated", updated);
+            yield break;
+        }
 
-		/// <summary>
-		/// Configuration client
-		/// </summary>
-		/// <param name="endpointGetter"></param>
-		/// <param name="sslVerificationEnabled"></param>
-		public ConfigurationClient(Func<string> endpointGetter, bool sslVerificationEnabled = true)
-		{
-			this._EndpointGetter = endpointGetter;
-			if (!sslVerificationEnabled)
-			{
-				ServicePointManager.ServerCertificateValidationCallback = (RemoteCertificateValidationCallback)Delegate.Combine(ServicePointManager.ServerCertificateValidationCallback, new RemoteCertificateValidationCallback(this.ValidateRemoteCertificate));
-			}
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSetConnectionStringRequest(int id, string value, DateTime updated)
+        {
+            yield return new KeyValuePair<string, object>("id", id);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("updated", updated);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public Setting GetSetting(string groupName, string settingName)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("groupName", groupName),
-				new KeyValuePair<string, object>("settingName", settingName)
-			};
-			return this.Get<Setting>("/v1/GetSetting", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructCreateSettingRequest(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime created, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("name", settingName);
+            yield return new KeyValuePair<string, object>("type", type);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("comment", comment);
+            yield return new KeyValuePair<string, object>("isEnvironmentSpecific", isEnvironmentSpecific);
+            yield return new KeyValuePair<string, object>("created", created);
+            yield return new KeyValuePair<string, object>("isMasked", isMasked);
+            yield return new KeyValuePair<string, object>("isValueSameForAllTestEnvironments", isValueSameForAllTestEnvironments);
+            yield return new KeyValuePair<string, object>("isValueUniqueForProduction", isValueUniqueForProduction);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public Setting GetSetting(int id)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("id", id)
-			};
-			return this.Get<Setting>("/v1/GetSetting", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSetSettingRequest(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime updated, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("name", settingName);
+            yield return new KeyValuePair<string, object>("type", type);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("comment", comment);
+            yield return new KeyValuePair<string, object>("isEnvironmentSpecific", isEnvironmentSpecific);
+            yield return new KeyValuePair<string, object>("updated", updated);
+            yield return new KeyValuePair<string, object>("isMasked", isMasked);
+            yield return new KeyValuePair<string, object>("isValueSameForAllTestEnvironments", isValueSameForAllTestEnvironments);
+            yield return new KeyValuePair<string, object>("isValueUniqueForProduction", isValueUniqueForProduction);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public Setting UnmaskSetting(string groupName, string settingName)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("groupName", groupName),
-				new KeyValuePair<string, object>("settingName", settingName)
-			};
-			return this.Post<Setting>("/v1/UnmaskSetting", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSetSettingRequest(int id, string type, string value, string comment, bool isEnvironmentSpecific, DateTime updated, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            yield return new KeyValuePair<string, object>("id", id);
+            yield return new KeyValuePair<string, object>("type", type);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("comment", comment);
+            yield return new KeyValuePair<string, object>("isEnvironmentSpecific", isEnvironmentSpecific);
+            yield return new KeyValuePair<string, object>("updated", updated);
+            yield return new KeyValuePair<string, object>("isMasked", isMasked);
+            yield return new KeyValuePair<string, object>("isValueSameForAllTestEnvironments", isValueSameForAllTestEnvironments);
+            yield return new KeyValuePair<string, object>("isValueUniqueForProduction", isValueUniqueForProduction);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public IEnumerable<Setting> GetSettings(string groupName)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("groupName", groupName),
-			};
-			return this.Get<List<Setting>>("/v1/GetSettings", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructGroupRequest(string groupName)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public IEnumerable<string> GetGroupNames()
-		{
-			return this.Get<List<string>>("/v1/GetGroupNames");
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructConnectionStringBaseRequest(string groupName, string connectionStringName)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("connectionStringName", connectionStringName);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public void CreateSetting(ISetting setting)
-		{
-			this.CreateSetting(setting.GroupName, setting.Name, setting.Type, setting.Value, setting.Comment, setting.IsEnvironmentSpecific, setting.Updated, setting.IsMasked, setting.IsValueSameForAllTestEnvironments, setting.IsValueUniqueForProduction);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructIDRequest(int id)
+        {
+            yield return new KeyValuePair<string, object>("id", id);
+            yield break;
+        }
 
-		/// <summary>
-		/// Creates a setting
-		/// </summary>
-		/// <param name="groupName"></param>
-		/// <param name="settingName"></param>
-		/// <param name="type"></param>
-		/// <param name="value"></param>
-		/// <param name="comment"></param>
-		/// <param name="isEnvironmentSpecific"></param>
-		/// <param name="created"></param>
-		/// <param name="isMasked"></param>
-		/// <param name="isValueSameForAllTestEnvironments"></param>
-		/// <param name="isValueUniqueForProduction"></param>
-		public void CreateSetting(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime created, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("groupName", groupName),
-				new KeyValuePair<string, object>("settingName", settingName),
-				new KeyValuePair<string, object>("type", type),
-				new KeyValuePair<string, object>("value", value),
-				new KeyValuePair<string, object>("comment", comment),
-				new KeyValuePair<string, object>("isEnvironmentSpecific", isEnvironmentSpecific),
-				new KeyValuePair<string, object>("created", created),
-				new KeyValuePair<string, object>("isMasked", isMasked),
-				new KeyValuePair<string, object>("isValueSameForAllTestEnvironments", isValueSameForAllTestEnvironments),
-				new KeyValuePair<string, object>("isValueUniqueForProduction", isValueUniqueForProduction)
-			};
-			this.Post("/v1/CreateSetting", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSettingBaseRequest(string groupName, string settingName)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("settingName", settingName);
+            yield break;
+        }
 
-		/// <inheritdoc />
-		public void SetSetting(ISetting setting)
-		{
-			this.SetSetting(setting.GroupName, setting.Name, setting.Type, setting.Value, setting.Comment, setting.IsEnvironmentSpecific, setting.Updated, setting.IsMasked, setting.IsValueSameForAllTestEnvironments, setting.IsValueUniqueForProduction);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructPageRequest(int pageSize, int page)
+        {
+            yield return new KeyValuePair<string, object>("pageSize", pageSize);
+            yield return new KeyValuePair<string, object>("page", page);
+            yield break;
+        }
 
-		/// <summary>
-		/// Updates a setting
-		/// </summary>
-		/// <param name="groupName"></param>
-		/// <param name="settingName"></param>
-		/// <param name="type"></param>
-		/// <param name="value"></param>
-		/// <param name="comment"></param>
-		/// <param name="isEnvironmentSpecific"></param>
-		/// <param name="updated"></param>
-		/// <param name="isMasked"></param>
-		/// <param name="isValueSameForAllTestEnvironments"></param>
-		/// <param name="isValueUniqueForProduction"></param>
-		public void SetSetting(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime updated, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
-		{
-			KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[]
-			{
-				new KeyValuePair<string, object>("groupName", groupName),
-				new KeyValuePair<string, object>("settingName", settingName),
-				new KeyValuePair<string, object>("type", type),
-				new KeyValuePair<string, object>("value", value),
-				new KeyValuePair<string, object>("comment", comment),
-				new KeyValuePair<string, object>("isEnvironmentSpecific", isEnvironmentSpecific),
-				new KeyValuePair<string, object>("updated", updated),
-				new KeyValuePair<string, object>("isMasked", isMasked),
-				new KeyValuePair<string, object>("isValueSameForAllTestEnvironments", isValueSameForAllTestEnvironments),
-				new KeyValuePair<string, object>("isValueUniqueForProduction", isValueUniqueForProduction)
-			};
-			this.Post("/v1/SetSetting", parameters);
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructGroupPageRequest(string groupName, int pageSize, int page)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("pageSize", pageSize);
+            yield return new KeyValuePair<string, object>("page", page);
+            yield break;
+        }
 
-		/// <summary>
-		/// Override
-		/// </summary>
-		protected override void OnRequestStarting()
-		{
-		}
+        private IEnumerable<KeyValuePair<string, object>> ConstructSetPropertyRequest(string groupName, string settingName, string type, string value, string comment, bool? isConnectionString)
+        {
+            yield return new KeyValuePair<string, object>("groupName", groupName);
+            yield return new KeyValuePair<string, object>("settingName", settingName);
+            yield return new KeyValuePair<string, object>("type", type);
+            yield return new KeyValuePair<string, object>("value", value);
+            yield return new KeyValuePair<string, object>("comment", comment);
+            yield return new KeyValuePair<string, object>("isConnectionString", isConnectionString);
+            yield break;
+        }
 
-		private T Fetch<T>(string path, IEnumerable<KeyValuePair<string, object>> parameters, bool httpPost = false)
-		{
-			try
-			{
-				if (httpPost)
-				{
-					this.Post(path, parameters, (IEnumerable<KeyValuePair<string, object>>) null, (IEnumerable<KeyValuePair<string, string>>) null, (string) null, (string) null);
-					return default(T);
-				}
-				return this.Get<T>(path, parameters, (IEnumerable<KeyValuePair<string, string>>) null, (string) null);
-			}
-			catch (ApiClientException val)
-			{
-				ApiClientException val2 = val;
-				WebException ex = ((Exception) (object) val2).InnerException as WebException;
-				if (ex != null)
-				{
-					HttpWebResponse httpWebResponse = (HttpWebResponse) ex.Response;
-					Stream responseStream;
-					if (httpWebResponse == null || httpWebResponse.StatusCode != HttpStatusCode.BadRequest || (responseStream = httpWebResponse.GetResponseStream()) == null)
-					{
-						throw;
-					}
-					string text = new StreamReader(responseStream).ReadToEnd();
-					ConfigurationServiceErrorResponse configurationServiceErrorResponse = JsonConvert.DeserializeObject<ConfigurationServiceErrorResponse>(text);
-					throw new Exception(configurationServiceErrorResponse.Message);
-				}
-				throw;
-			}
-		}
+        /// <inheritdoc />
+        public void CreateConnectionString(ConnectionString connectionString)
+        {
+            CreateConnectionString(connectionString.GroupName, connectionString.Name, connectionString.Value, connectionString.Updated);
+        }
+        /// <inheritdoc />
+        public void CreateConnectionString(string groupName, string connectionStringName, string value, DateTime updated)
+        {
+            var @params = ConstructCreateConnectionStringRequest(groupName, connectionStringName, value, updated);
+            PostJsonV2("/v1/CreateConnectionString", @params);
+        }
+        /// <inheritdoc />
+        public void CreateSetting(Setting setting)
+        {
+            CreateSetting(setting.GroupName, setting.Name, setting.Type, setting.Value, setting.Comment, setting.IsEnvironmentSpecific, setting.Updated, setting.IsMasked, setting.IsValueSameForAllTestEnvironments, setting.IsValueUniqueForProduction);
+        }
+        /// <inheritdoc />
+        public void CreateSetting(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime created, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            var @params = ConstructCreateSettingRequest(groupName, settingName, type, value, comment, isEnvironmentSpecific, created, isMasked, isValueSameForAllTestEnvironments, isValueUniqueForProduction);
+            PostJsonV2("/v1/CreateSetting", @params);
+        }
+        /// <inheritdoc />
+        public void DeleteAllConnectionStringsInGroup(string groupName)
+        {
+            PostJsonV2("/v1/DeleteAllConnectionStringsInGroup", ConstructGroupRequest(groupName));
+        }
+        /// <inheritdoc />
+        public void DeleteAllSettinsInGroup(string groupName)
+        {
+            PostJsonV2("/v1/DeleteAllSettinsInGroup", ConstructGroupRequest(groupName));
+        }
+        /// <inheritdoc />
+        public void DeleteConnectionString(string groupName, string connectionStringName)
+        {
+            PostJsonV2("/v1/DeleteConnectionString", ConstructConnectionStringBaseRequest(groupName, connectionStringName));
+        }
+        /// <inheritdoc />
+        public void DeleteConnectionString(int id)
+        {
+            PostJsonV2("/v1/DeleteConnectionString", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public void DeleteSetting(string groupName, string settingName)
+        {
+            PostJsonV2("/v1/DeleteSetting", ConstructSettingBaseRequest(groupName, settingName));
+        }
+        /// <inheritdoc />
+        public void DeleteSetting(int id)
+        {
+            PostJsonV2("/v1/DeleteSetting", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public ConnectionString GetConnectionString(string groupName, string connectionStringName)
+        {
+            return GetV2<ConnectionString>("/v1/GetConnectionString", ConstructConnectionStringBaseRequest(groupName, connectionStringName));
+        }
+        /// <inheritdoc />
+        public ConnectionString GetConnectionString(int id)
+        {
+            return GetV2<ConnectionString>("/v1/GetConnectionString", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public ConnectionString[] GetConnectionStrings(string groupName, int pageSize, int page)
+        {
+            return GetV2<ConnectionString[]>("/v1/GetConnectionStrings", ConstructGroupPageRequest(groupName, pageSize, page));
+        }
+        /// <inheritdoc />
+        public int GetCountOfConnectionStringsInGroup(string groupName)
+        {
+            return GetV2<int>("/v1/GetCountOfConnectionStringsInGroup", ConstructGroupRequest(groupName));
+        }
+        /// <inheritdoc />
+        public int GetCountOfSettingsInGroup(string groupName)
+        {
+            return GetV2<int>("/v1/GetCountOfSettingsInGroup", ConstructGroupRequest(groupName));
+        }
+        /// <inheritdoc />
+        public string[] GetGroupNames(int pageSize, int page)
+        {
+            return GetV2<string[]>("/v1/GetGroupNames", ConstructPageRequest(pageSize, page));
+        }
+        /// <inheritdoc />
+        public Setting GetMaskedSetting(string groupName, string settingName)
+        {
+            return GetV2<Setting>("/v1/GetMaskedSetting", ConstructSettingBaseRequest(groupName, settingName));
+        }
+        /// <inheritdoc />
+        public Setting GetMaskedSetting(int id)
+        {
+            return GetV2<Setting>("/v1/GetMaskedSetting", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public Setting GetSetting(string groupName, string settingName)
+        {
+            return GetV2<Setting>("/v1/GetSetting", ConstructSettingBaseRequest(groupName, settingName));
+        }
+        /// <inheritdoc />
+        public Setting GetSetting(int id)
+        {
+            return GetV2<Setting>("/v1/GetSetting", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public Setting[] GetSettings(string groupName, int pageSize, int page)
+        {
+            return GetV2<Setting[]>("/v1/GetSettings", ConstructGroupPageRequest(groupName, pageSize, page));
+        }
+        /// <inheritdoc />
+        public void MaskSetting(string groupName, string settingName)
+        {
+            PostJsonV2("/v1/MaskSetting", ConstructSettingBaseRequest(groupName, settingName));
+        }
+        /// <inheritdoc />
+        public void MaskSetting(int id)
+        {
+            PostJsonV2("/v1/MaskSetting", ConstructIDRequest(id));
+        }
+        /// <inheritdoc />
+        public void SetConnectionString(ConnectionString connectionString)
+        {
+            if (connectionString.Id != default(int))
+            {
+                SetConnectionString(connectionString.Id, connectionString.Value, connectionString.Updated);
+                return;
+            }
 
-		private T Get<T>(string path, IEnumerable<KeyValuePair<string, object>> parameters)
-		{
-			return this.Fetch<T>(path, parameters, false);
-		}
+            SetConnectionString(connectionString.GroupName, connectionString.Name, connectionString.Value, connectionString.Updated);
+        }
+        /// <inheritdoc />
+        public void SetConnectionString(string groupName, string connectionStringName, string value, DateTime updated)
+        {
+            var @params = ConstructSetConnectionStringRequest(groupName, connectionStringName, value, updated);
+            PostJsonV2("/v1/SetConnectionString", @params);
+        }
+        /// <inheritdoc />
+        public void SetConnectionString(int id, string value, DateTime updated)
+        {
+            var @params = ConstructSetConnectionStringRequest(id, value, updated);
+            PostJsonV2("/v1/SetConnectionString", @params);
+        }
+        public void SetProperty(SetPropertyRequest request)
+        {
+            SetProperty(request.GroupName, request.Name, request.Type, request.Value, request.Comment, request.IsConnectionString);
+        }
+        public void SetProperty(string groupName, string settingName, string type, string value, string comment, bool? isConnectionString)
+        {
+            var @params = ConstructSetPropertyRequest(groupName, settingName, type, value, comment, isConnectionString);
+            PostJsonV2("/v1/SetProperty", @params);
+        }
+        public void SetSetting(Setting setting)
+        {
+            if (setting.Id != default(int))
+            {
+                SetSetting(setting.Id, setting.Type, setting.Value, setting.Comment, setting.IsEnvironmentSpecific, setting.Updated, setting.IsMasked, setting.IsValueSameForAllTestEnvironments, setting.IsValueUniqueForProduction);
+                return;
+            }
 
-		private void Post(string path, IEnumerable<KeyValuePair<string, object>> parameters)
-		{
-			this.Fetch<object>(path, parameters, true);
-		}
+            SetSetting(setting.GroupName, setting.Name, setting.Type, setting.Value, setting.Comment, setting.IsEnvironmentSpecific, setting.Updated, setting.IsMasked, setting.IsValueSameForAllTestEnvironments, setting.IsValueUniqueForProduction);
+        }
+        public void SetSetting(string groupName, string settingName, string type, string value, string comment, bool isEnvironmentSpecific, DateTime updated, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            var @params = ConstructSetSettingRequest(groupName, settingName, type, value, comment, isEnvironmentSpecific, updated, isMasked, isValueSameForAllTestEnvironments, isValueUniqueForProduction);
+            PostJsonV2("/v1/SetSetting", @params);
+        }
+        public void SetSetting(int id, string type, string value, string comment, bool isEnvironmentSpecific, DateTime updated, bool isMasked, bool isValueSameForAllTestEnvironments, bool isValueUniqueForProduction)
+        {
+            var @params = ConstructSetSettingRequest(id, type, value, comment, isEnvironmentSpecific, updated, isMasked, isValueSameForAllTestEnvironments, isValueUniqueForProduction);
+            PostJsonV2("/v1/SetSetting", @params);
+        }
+        public void UnmaskSetting(string groupName, string settingName)
+        {
+            PostJsonV2("/v1/UnmaskSetting", ConstructSettingBaseRequest(groupName, settingName));
+        }
+        public void UnmaskSetting(int id)
+        {
+            PostJsonV2("/v1/UnmaskSetting", ConstructIDRequest(id));
+        }
 
-		/// <summary>
-		/// Certificate validation callback.
-		/// </summary>
-		private bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
-		{
-			return true;
-		}
+        private void PostJsonV2(string path, IEnumerable<KeyValuePair<string, object>> parameters)
+        {
+            WrapPost(path, null, null, JsonConvert.SerializeObject(parameters.ToDictionary(k => k.Key, v => v.Value)));
+        }
 
-		private readonly Func<string> _EndpointGetter;
-	}
+        private T GetV2<T>(string path, IEnumerable<KeyValuePair<string, object>> parameters)
+        {
+            return WrapGet<T>(path, parameters, null, null);
+        }
+
+        private void WrapPost(string actionPath, IEnumerable<KeyValuePair<string, object>> queryStringParameters = null, IEnumerable<KeyValuePair<string, string>> headers = null, string jsonPostData = null, string actionName = null)
+        {
+            try
+            {
+                PostJson(actionPath, queryStringParameters, headers, jsonPostData, actionName);
+            }
+            catch (ApiClientException ex)
+            {
+                HandleConfigurationException(ex);
+            }
+        }
+
+        private T WrapGet<T>(string actionPath, IEnumerable<KeyValuePair<string, object>> queryStringParameters = null, IEnumerable<KeyValuePair<string, string>> headers = null, string actionName = null)
+        {
+            try
+            {
+                return Get<T>(actionPath, queryStringParameters, headers, actionName);
+            }
+            catch (ApiClientException ex)
+            {
+                HandleConfigurationException(ex);
+                return default(T);
+            }
+        }
+
+        private void HandleConfigurationException(ApiClientException ex)
+        {
+            if (ex.InnerException is WebException e)
+            {
+                var response = (HttpWebResponse)e.Response;
+                Stream stream;
+                if (response == null || response.StatusCode != HttpStatusCode.Conflict || (stream = response.GetResponseStream()) == null)
+                {
+                    throw ex;
+                }
+                string text = new StreamReader(stream).ReadToEnd();
+                var error = JsonConvert.DeserializeObject<ConfigurationServiceErrorResponse>(text);
+                throw new Exception(error.Message);
+            }
+            throw ex;
+        }
+
+        private readonly Func<string> _EndpointGetter;
+        private readonly Func<string> _ApiKeyGetter;
+    }
 }

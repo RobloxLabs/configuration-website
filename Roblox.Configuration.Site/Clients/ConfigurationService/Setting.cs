@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Roblox.Configuration.Site.Clients.ConfigurationService
 {
-	/// <inheritdoc />
-	public class Setting : ISetting
+
+    /// <inheritdoc />
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
+    public class Setting : ISetting
 	{
 		/// <inheritdoc />
 		public int Id { get; set; }
@@ -38,32 +41,9 @@ namespace Roblox.Configuration.Site.Clients.ConfigurationService
 		/// <inheritdoc />
 		public bool IsValueUniqueForProduction { get; set; }
 
-		public Setting()
-		{
-		}
-
-		/// <summary>
-		/// Create a new setting that is a copy of an existing setting.
-		/// </summary>
-		/// <param name="setting"></param>
-		/// <exception cref="T:System.ArgumentNullException"><paramref name="setting" /></exception>
-		public Setting(Setting setting)
-		{
-			if (setting == null)
-			{
-				throw new ArgumentNullException("setting");
-			}
-			this.Id = setting.Id;
-			this.GroupName = setting.GroupName;
-			this.Name = setting.Name;
-			this.Type = setting.Type;
-			this.Value = setting.Value;
-			this.Comment = setting.Comment;
-			this.IsEnvironmentSpecific = setting.IsEnvironmentSpecific;
-			this.Updated = setting.Updated;
-			this.IsMasked = setting.IsMasked;
-			this.IsValueSameForAllTestEnvironments = setting.IsValueSameForAllTestEnvironments;
-			this.IsValueUniqueForProduction = setting.IsValueUniqueForProduction;
-		}
-	}
+        private string GetDebuggerDisplay()
+        {
+			return $"{GroupName}.{Name}";
+        }
+    }
 }

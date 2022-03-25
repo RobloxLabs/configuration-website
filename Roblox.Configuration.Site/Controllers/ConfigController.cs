@@ -17,7 +17,7 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetSettingsHtmlAjax(string groupName, string namePattern, string valuePattern)
         {
-            return PartialView("~/Views/Settings/Table.cshtml", MvcApplication.ConfigurationClient.GetSettings(groupName));
+            return PartialView("~/Views/Settings/Table.cshtml", MvcApplication.ConfigurationClient.GetSettings(groupName, 50, 0));
         }
 
         // GET: Config/GetSetting?settingGroupName=Roblox.Properties.Settings&settingName=TestSetting
@@ -35,8 +35,9 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetMaskedSetting(string settingGroupName, string settingName)
         {
-            SettingModel settingModel = MvcApplication.ConfigurationClient.UnmaskSetting(settingGroupName, settingName);
-            return Json(settingModel, JsonRequestBehavior.AllowGet);
+            //SettingModel settingModel = MvcApplication.ConfigurationClient.UnmaskSetting(settingGroupName, settingName);
+            //return Json(settingModel, JsonRequestBehavior.AllowGet);
+            return new HttpNotFoundResult("Setting not found");
         }
 
         // GET: Config/GetSettingAjax?id=1
@@ -72,14 +73,21 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public ActionResult DeleteSettingAjax(int? id)
         {
-            if (id != null && MvcApplication.ConfigurationClient.Dele)
+            try
             {
+                if (id != null)
+                {
+                    MvcApplication.ConfigurationClient.DeleteSetting((int)id);
+                }
+
                 // Success
                 return Content("Successfully deleted setting!");
             }
-
-            // Error
-            return Content("");
+            catch
+            {
+                // Error
+                return Content("");
+            }
         }
 
         // POST: Config/SetSettingAjax

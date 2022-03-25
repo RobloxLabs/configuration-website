@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roblox.Configuration.Site.Clients.ConfigurationService
+﻿namespace Roblox.Configuration.Site.Clients.ConfigurationService
 {
 	/// <summary>
 	/// ConfigurationServiceErrorResponse
