@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Roblox.Configuration;
 using Roblox.Configuration.Site.Models.Configuration;
+using Roblox.Configuration.Site.Clients.ConfigurationService;
 
 namespace Roblox.Configuration.Site.Controllers
 {
@@ -35,9 +36,8 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetMaskedSetting(string settingGroupName, string settingName)
         {
-            //SettingModel settingModel = MvcApplication.ConfigurationClient.UnmaskSetting(settingGroupName, settingName);
-            //return Json(settingModel, JsonRequestBehavior.AllowGet);
-            return new HttpNotFoundResult("Setting not found");
+            SettingModel settingModel = MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName);
+            return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Config/GetSettingAjax?id=1
@@ -75,10 +75,10 @@ namespace Roblox.Configuration.Site.Controllers
         {
             try
             {
-                if (id != null)
-                {
-                    MvcApplication.ConfigurationClient.DeleteSetting((int)id);
-                }
+                if (id == null)
+                    throw new ArgumentNullException("ID parameter cannot be null");
+
+                MvcApplication.ConfigurationClient.DeleteSetting(id.Value);
 
                 // Success
                 return Content("Successfully deleted setting!");
@@ -92,13 +92,13 @@ namespace Roblox.Configuration.Site.Controllers
 
         // POST: Config/SetSettingAjax
         [HttpPost]
-        public ActionResult SetSettingAjax(FormCollection collection)
+        public ActionResult SetSettingAjax(
+            int? id, string value, string comment = "",
+            bool env = false, bool isMasked = false,
+            bool isValueSameForAllTestEnvironments = false,
+            bool isValueUniqueForProduction = false
+            )
         {
-            var response = new SetSettingResponseModel();
-            // Do code stuff
-            response.SettingSaved = true;
-            response.Message = ""; // This needs to be empty on success
-
             /*
                 Collection params:
                 id,
@@ -114,35 +114,41 @@ namespace Roblox.Configuration.Site.Controllers
                 type,
                 name
             */
+            var response = new SetSettingResponseModel
+            {
+                SettingSaved = true,
+                Message = "" // This needs to be empty on success
+            };
 
             try
             {
+                if (!id.HasValue)
+                    throw new ArgumentNullException("ID");
+                else if (string.IsNullOrEmpty(value))
+                    throw new ArgumentNullException("Value");
 
-                var settingModel = new SettingModel
+                // TODO: Can we take the non-updates values and pass them in anyways without updating them?
+                // Maybe config service will only use them for identification?
+                Setting setting = MvcApplication.ConfigurationClient.GetSetting(id.Value);
+                setting = new Setting
                 {
-                    Id = int.Parse(collection.Get("id")),
-                    Value = collection.Get("value"),
-                    Comment = collection.Get("comment"),
-                    IsEnvironmentSpecific = bool.Parse(collection.Get("env")),
-                    IsMasked = bool.Parse(collection.Get("isMasked"))
-                    // ??
-                    //IsValueSameForAllTestEnvironments = bool.Parse(collection.Get("isValueSameForAllTestEnvironments")),
-                    //IsValueUniqueForProduction = bool.Parse(collection.Get("isValueUniqueForProduction")),
+                    Id = id.Value,
+                    Value = value,
+                    Comment = comment,
+                    IsEnvironmentSpecific = env,
+                    IsMasked = isMasked,
+                    IsValueSameForAllTestEnvironments = isValueSameForAllTestEnvironments,
+                    IsValueUniqueForProduction = isValueUniqueForProduction,
+                    // following settings will NOT get updated on save
+                    GroupName = setting.GroupName,
+                    Type = setting.Type,
+                    Name = setting.Name
                 };
 
-                settingModel.GroupName = collection.Get("group");
-                settingModel.Type = collection.Get("type");
-                settingModel.Name = collection.Get("name");
-
-                if (string.IsNullOrEmpty(settingModel.GroupName))
-                    throw new ApplicationException("A value for GroupName is required");
-                if (string.IsNullOrEmpty(settingModel.Type))
-                    throw new ApplicationException("A value for Type is required");
-                if (string.IsNullOrEmpty(settingModel.Name))
-                    throw new ApplicationException("A value for Name is required");
-
-                // Push to the config service if possible
-
+                if (id > 0)
+                    MvcApplication.ConfigurationClient.SetSetting(setting);
+                else
+                    MvcApplication.ConfigurationClient.CreateSetting(setting);
             }
             catch (Exception ex)
             {
@@ -155,18 +161,23 @@ namespace Roblox.Configuration.Site.Controllers
 
         // POST: Config/ValidateRedisEndpoints
         [HttpPost]
-        public ActionResult ValidateRedisEndpoints(FormCollection collection)
+        public ActionResult ValidateRedisEndpoints(string rawEndpoints)
         {
-            var response = new ValidationResponseModel();
+            var response = new ValidationResponseModel
+            {
+                Success = true,
+                Message = "Success!"
+            };
 
-            /*
-                Collection params:
-                rawEndpoints
-            */
+            try
+            {
 
-            // Do code stuff
-            response.Success = true;
-            response.Message = "Success!";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
 
             return Json(response);
         }
@@ -175,15 +186,11 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public ActionResult ValidateWeightedCsv(string rawWeightedCsv)
         {
-            var response = new ValidationResponseModel();
-
-            /*
-                Collection params:
-                rawWeightedCsv
-            */
-
-            response.Success = true;
-            response.Message = "Success!";
+            var response = new ValidationResponseModel
+            {
+                Success = true,
+                Message = "Success!"
+            };
 
             try
             {

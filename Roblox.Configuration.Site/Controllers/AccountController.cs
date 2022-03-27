@@ -63,13 +63,13 @@ namespace Roblox.Configuration.Site.Controllers
 
             userName = GetUsername(userName);
 
-            if (false/*ActiveDirectoryAccessVerifier.VerifyActiveDirectoryPassword(userName, password, global::Roblox.Configuration.Site.Properties.Settings.Default.ActiveDirectoryDomain)*/)
+            /*if (ActiveDirectoryAccessVerifier.VerifyActiveDirectoryPassword(userName, password, global::Roblox.Configuration.Site.Properties.Settings.Default.ActiveDirectoryDomain))
             {
                 FormsAuthentication.SetAuthCookie(userName.ToLower(), true);
                 AuthenticateThisRequest();
 
                 return Redirect(returnUrl);
-            }
+            }*/
 
             return ShowError("Invalid username or password.", returnUrl);
         }

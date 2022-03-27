@@ -9,10 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.ApiClientBase", "..\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resolution", "Resolution", "{9476B739-F065-4248-A704-FA15D70CB0AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.DataV2.Core", "..\..\Assemblies\DataV2\Core\Roblox.DataV2.Core\Roblox.DataV2.Core.csproj", "{DF274A14-E368-4DD3-931A-E3580D875B9F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.Sentinels", "..\..\Assemblies\Sentinels\Roblox.Sentinels\Roblox.Sentinels.csproj", "{115529F0-F365-4759-84F1-DFBD3B56967E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.Instrumentation", "..\..\Assemblies\Instrumentation\Roblox.Instrumentation\Roblox.Instrumentation.csproj", "{416ACB6A-F683-4306-8431-817A026EB6BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.Configuration", "..\..\Assemblies\Configuration\Roblox.Configuration\Roblox.Configuration.csproj", "{6316D070-7193-4F41-9B70-F13D6875563F}"
@@ -22,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roblox.ActiveDirectory", "..\..\Assemblies\Windows\Roblox.ActiveDirectory\Roblox.ActiveDirectory.csproj", "{35FCCB7E-F57D-427F-A1F4-3549571CF2C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roblox.EventLog", "..\..\Assemblies\EventLog\Roblox.EventLog\Roblox.EventLog.csproj", "{6B942852-0B51-42E6-9142-CF0C583E9B4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roblox.DataV2.Core", "..\..\Assemblies\DataV2\Core\Roblox.DataV2.Core\Roblox.DataV2.Core.csproj", "{417D5BAF-4B56-4EA3-B30C-0E1100EF1919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roblox.Sentinels", "..\..\Assemblies\Sentinels\Roblox.Sentinels\Roblox.Sentinels.csproj", "{66F8991A-8FE1-41E6-8747-E6940C8A4B26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,6 @@ Global
 		{DAE6FAB3-F9F4-444A-9235-644D5B97E360}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAE6FAB3-F9F4-444A-9235-644D5B97E360}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAE6FAB3-F9F4-444A-9235-644D5B97E360}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF274A14-E368-4DD3-931A-E3580D875B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF274A14-E368-4DD3-931A-E3580D875B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF274A14-E368-4DD3-931A-E3580D875B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF274A14-E368-4DD3-931A-E3580D875B9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{115529F0-F365-4759-84F1-DFBD3B56967E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{115529F0-F365-4759-84F1-DFBD3B56967E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{115529F0-F365-4759-84F1-DFBD3B56967E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{115529F0-F365-4759-84F1-DFBD3B56967E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{416ACB6A-F683-4306-8431-817A026EB6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{416ACB6A-F683-4306-8431-817A026EB6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{416ACB6A-F683-4306-8431-817A026EB6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,6 +53,14 @@ Global
 		{6B942852-0B51-42E6-9142-CF0C583E9B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B942852-0B51-42E6-9142-CF0C583E9B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B942852-0B51-42E6-9142-CF0C583E9B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{417D5BAF-4B56-4EA3-B30C-0E1100EF1919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{417D5BAF-4B56-4EA3-B30C-0E1100EF1919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{417D5BAF-4B56-4EA3-B30C-0E1100EF1919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{417D5BAF-4B56-4EA3-B30C-0E1100EF1919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66F8991A-8FE1-41E6-8747-E6940C8A4B26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66F8991A-8FE1-41E6-8747-E6940C8A4B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66F8991A-8FE1-41E6-8747-E6940C8A4B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66F8991A-8FE1-41E6-8747-E6940C8A4B26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,12 +68,12 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DAE6FAB3-F9F4-444A-9235-644D5B97E360} = {038AED86-17AE-46AF-8F26-B3A346C0DF1F}
 		{9476B739-F065-4248-A704-FA15D70CB0AE} = {038AED86-17AE-46AF-8F26-B3A346C0DF1F}
-		{DF274A14-E368-4DD3-931A-E3580D875B9F} = {9476B739-F065-4248-A704-FA15D70CB0AE}
-		{115529F0-F365-4759-84F1-DFBD3B56967E} = {9476B739-F065-4248-A704-FA15D70CB0AE}
 		{416ACB6A-F683-4306-8431-817A026EB6BF} = {9476B739-F065-4248-A704-FA15D70CB0AE}
 		{6316D070-7193-4F41-9B70-F13D6875563F} = {038AED86-17AE-46AF-8F26-B3A346C0DF1F}
 		{35FCCB7E-F57D-427F-A1F4-3549571CF2C1} = {038AED86-17AE-46AF-8F26-B3A346C0DF1F}
 		{6B942852-0B51-42E6-9142-CF0C583E9B4F} = {038AED86-17AE-46AF-8F26-B3A346C0DF1F}
+		{417D5BAF-4B56-4EA3-B30C-0E1100EF1919} = {9476B739-F065-4248-A704-FA15D70CB0AE}
+		{66F8991A-8FE1-41E6-8747-E6940C8A4B26} = {9476B739-F065-4248-A704-FA15D70CB0AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29DA90FF-172A-475C-A45B-36E63E4C122A}
