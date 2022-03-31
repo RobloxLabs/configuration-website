@@ -169,11 +169,13 @@ $(function () {
                 return;
             } //too short
             var url = "/Config/GetSettingsHtmlAjax?" + $.param({ GroupName: groupName, NamePattern: namePattern, ValuePattern: valuePattern });
-            $.get(url, function (response) {
+            // I can't being to wrap my head around why they were doing these requests twice...
+            // They probably got some underpaid intern to do this shit
+            /*$.get(url, function (response) {
                 if (requestCount === requestCounter) {
                     $("#settingsResultsDiv").html(response);
                 }
-            });
+            });*/
             $("#settingsResultsDiv").load(url, function () {
                 if (handler) {
                     handler();

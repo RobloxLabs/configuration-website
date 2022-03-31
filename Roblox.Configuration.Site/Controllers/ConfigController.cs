@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Roblox.Configuration;
 using Roblox.Configuration.Site.Models.Configuration;
 using Roblox.Configuration.Site.Clients.ConfigurationService;
 
@@ -18,13 +17,29 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetSettingsHtmlAjax(string groupName, string namePattern, string valuePattern)
         {
-            return PartialView("~/Views/Settings/Table.cshtml", MvcApplication.ConfigurationClient.GetSettings(groupName, 50, 0));
+            IEnumerable<Setting> settings = Enumerable.Empty<Setting>();
+
+            if (!string.IsNullOrEmpty(groupName))
+                settings = MvcApplication.ConfigurationClient.GetSettings(
+                    groupName,  // Group name
+                    50,         // Page size
+                    0           // Page number
+                );
+
+            return PartialView(
+                "~/Views/Settings/Table.cshtml",
+                settings
+            );
         }
 
         // GET: Config/GetSetting?settingGroupName=Roblox.Properties.Settings&settingName=TestSetting
         [HttpGet]
         public ActionResult GetSetting(string settingGroupName, string settingName)
         {
+            if (string.IsNullOrEmpty(settingGroupName))
+                throw new ArgumentNullException("GroupName");
+            else if (string.IsNullOrEmpty(settingName))
+                throw new ArgumentNullException("Name");
 
             SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
             if (settingModel == null)
@@ -36,15 +51,23 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult GetMaskedSetting(string settingGroupName, string settingName)
         {
+            if (string.IsNullOrEmpty(settingGroupName))
+                throw new ArgumentNullException("GroupName");
+            else if (string.IsNullOrEmpty(settingName))
+                throw new ArgumentNullException("Name");
+
             SettingModel settingModel = MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName);
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Config/GetSettingAjax?id=1
         [HttpGet]
-        public ActionResult GetSettingAjax(int id)
+        public ActionResult GetSettingAjax(int? id)
         {
-            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(id);
+            if (!id.HasValue)
+                throw new ArgumentNullException("ID");
+
+            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(id.Value);
             if (settingModel == null)
                 return new HttpNotFoundResult("Setting with ID " + id + " not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
@@ -75,8 +98,8 @@ namespace Roblox.Configuration.Site.Controllers
         {
             try
             {
-                if (id == null)
-                    throw new ArgumentNullException("ID parameter cannot be null");
+                if (!id.HasValue)
+                    throw new ArgumentNullException("ID");
 
                 MvcApplication.ConfigurationClient.DeleteSetting(id.Value);
 
@@ -92,12 +115,7 @@ namespace Roblox.Configuration.Site.Controllers
 
         // POST: Config/SetSettingAjax
         [HttpPost]
-        public ActionResult SetSettingAjax(
-            int? id, string value, string comment = "",
-            bool env = false, bool isMasked = false,
-            bool isValueSameForAllTestEnvironments = false,
-            bool isValueUniqueForProduction = false
-            )
+        public ActionResult SetSettingAjax(SettingModel setting)
         {
             /*
                 Collection params:
@@ -122,33 +140,25 @@ namespace Roblox.Configuration.Site.Controllers
 
             try
             {
-                if (!id.HasValue)
-                    throw new ArgumentNullException("ID");
-                else if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(setting.Value))
                     throw new ArgumentNullException("Value");
 
-                // TODO: Can we take the non-updates values and pass them in anyways without updating them?
-                // Maybe config service will only use them for identification?
-                Setting setting = MvcApplication.ConfigurationClient.GetSetting(id.Value);
-                setting = new Setting
+                if (setting.Id > 0)
                 {
-                    Id = id.Value,
-                    Value = value,
-                    Comment = comment,
-                    IsEnvironmentSpecific = env,
-                    IsMasked = isMasked,
-                    IsValueSameForAllTestEnvironments = isValueSameForAllTestEnvironments,
-                    IsValueUniqueForProduction = isValueUniqueForProduction,
-                    // following settings will NOT get updated on save
-                    GroupName = setting.GroupName,
-                    Type = setting.Type,
-                    Name = setting.Name
-                };
-
-                if (id > 0)
+                    // Update setting
+                    // TODO: Can we take the non-updates values and pass them in anyways without updating them?
+                    // Maybe config service will only use them for identification?
+                    Setting oldSetting = MvcApplication.ConfigurationClient.GetSetting(setting.Id);
+                    setting.Group = oldSetting.GroupName;
+                    setting.Type = oldSetting.Type;
+                    setting.Name = oldSetting.Name;
                     MvcApplication.ConfigurationClient.SetSetting(setting);
+                }
                 else
+                {
+                    // Create a brand new setting
                     MvcApplication.ConfigurationClient.CreateSetting(setting);
+                }
             }
             catch (Exception ex)
             {

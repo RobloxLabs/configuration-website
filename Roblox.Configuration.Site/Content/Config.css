@@ -64,7 +64,7 @@
 /* name column */
 .settingsTable .n 
 {
-    width: 270px;
+    min-width: 270px;
 }
 
 /* Highlight results from filter*/
@@ -122,7 +122,7 @@
 /* connection string */
 .settingsTable .cs
 {
-    width: 400px;
+    min-width: 400px;
 }
 
 /* comment column */
@@ -132,7 +132,7 @@
 
 /* group column in connection strings */
 .settingsTable .g {
-    width: 300px;
+    min-width: 300px;
 }
 
 /* group column trimmed */
