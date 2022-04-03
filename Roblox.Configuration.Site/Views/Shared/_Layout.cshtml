@@ -27,11 +27,11 @@
                     </div>
 
                 <ul class="nav navbar-nav">
-                    <li class="@Html.IsActive("Default", "ListConfigurationGroups")">
-                        @Html.ActionLink("Configuration Groups", "ListConfigurationGroups", controllerName: "Default")
-                    </li>
                     <li class="">
                         <a href="/system-events">System Events</a>
+                    </li>
+                    <li class="@Html.IsActive("Default", "ListConfigurationGroups")">
+                        @Html.ActionLink("Configuration Groups", "ListConfigurationGroups", controllerName: "Default")
                     </li>
                     <li class="@Html.IsActive("Config")">
                         @Html.ActionLink("Search", "Search", "Config")
