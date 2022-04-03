@@ -1,9 +1,9 @@
-﻿@model Roblox.Configuration.Site.Clients.ConfigurationService.Setting
+﻿@model Roblox.Configuration.Site.Models.Configuration.SettingModel
 
 <tr data-sid="@Model.Id">
     <td>@Model.Id</td>
-    <td class="a">
-        <div class="btn-group" style="width: 60px">
+    <td class="a" style="width: 75px">
+        <div class="btn-group">
             <button type="button" class="settingsEditButton btn btn-primary btn-xs">Edit</button>
             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
@@ -15,36 +15,34 @@
             </ul>
         </div>
     </td>
-    <td><div class="gt">@Model.GroupName</div></td>
-    <td><div class="n" title="@Model.Name">@Model.Name</div></td>
-    <td><div class="t">@Model.Type</div></td>
-    <td>
-        <div class="valueCell">
-            @* This is here because some genuis decided to use an entire endpoint to get this value, yet also require it to be provided here.*@
-            <span class="setting-value" hidden>@Model.Value</span>
-            <span class="value @(Model.IsMasked ? "secret" : "")" title="@Model.Value">
-                @if (Model.IsMasked)
-                {
-                    @:[value not shown]
-                }
-                else
-                {
-                    @Model.Value
-                }
-            </span>
+    <td class="gt"><div class="gt truncated">@Model.GroupName</div></td>
+    <td class="n"><div class="n truncated" title="@Model.Name">@Model.Name</div></td>
+    <td class="t">@Model.Type</td>
+    <td class="valueCell">
+        @* This is here because some genuis decided to use an entire endpoint to get this value, yet also require it to be provided here.*@
+        <span class="setting-value" hidden>@Model.Value</span>
+        <span class="value truncated @(Model.IsMasked ? "secret" : "")" title="@Model.Value">
             @if (Model.IsMasked)
             {
-                <div class="showSettingDiv">
-                    <span class="showSettingButton btn btn-default btn-xs pull-right" data-groupname="@Model.GroupName" data-settingname="@Model.Name">Show</span>
-                </div>
+                @:[value not shown]
             }
-            <div class="copyValue @(Model.IsMasked ? "masked" : "")">
-                <a href="javascript:navigator.clipboard.writeText('@Model.Value')" title="@Html.Encode("Copy this:\n " + Model.Value)" class="copyIcon">
-                    <span class="copyToClipboardIcon" />
-                </a>
+            else
+            {
+                @Model.Value
+            }
+        </span>
+        @if (Model.IsMasked)
+        {
+            <div class="showSettingDiv">
+                <span class="showSettingButton btn btn-default btn-xs pull-right" data-groupname="@Model.GroupName" data-settingname="@Model.Name">Show</span>
             </div>
+        }
+        <div class="copyValue @(Model.IsMasked ? "masked" : "")">
+            <a href="javascript:navigator.clipboard.writeText('@HttpUtility.JavaScriptStringEncode(Model.Value)')" title="@("Copy this:\n " + Model.Value))" class="copyIcon">
+                <span class="copyToClipboardIcon" />
+            </a>
         </div>
     </td>
-    <td><div class="c">@Model.Comment</div></td>
-    <td>@Html.DisplayFor(modelItem => Model.Updated)</td>
+    <td class="c"><div class="truncated" title="@Model.Comment">@Model.Comment</div></td>
+    <td>@Model.LastModified</td>
 </tr>

@@ -175,7 +175,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\ConnectionStringsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="ModelFactories\Configuration\SettingModelFactory.cs" />
+    <Compile Include="ModelFactories\Configuration\ConnectionStringModelFactory.cs" />
     <Compile Include="Models\Configuration\ValidateWeightedCsvRequest.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -201,6 +204,7 @@
     <Content Include="Content\Config.css" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="images\logo.png" />
     <Content Include="themes\aristo\Aristo.css" />
     <Content Include="themes\aristo\images\bg_fallback.png" />
     <Content Include="themes\aristo\images\icon_sprite.png" />
@@ -262,10 +266,14 @@
     <Content Include="Views\Settings\Table.cshtml" />
     <Content Include="Views\Settings\Row.cshtml" />
     <Content Include="Views\Config\GroupNamesArrayScript.cshtml" />
+    <Content Include="Views\ConnectionStrings\Dialog.cshtml" />
+    <Content Include="Views\ConnectionStrings\Row.cshtml" />
+    <Content Include="Views\ConnectionStrings\Search.cshtml" />
+    <Content Include="Views\ConnectionStrings\Table.cshtml" />
+    <Content Include="Views\Config\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Shared\" />
-    <Folder Include="Views\ConnectionStrings\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Assemblies\ApiClientBase\Roblox.ApiClientBase\Roblox.ApiClientBase.csproj">

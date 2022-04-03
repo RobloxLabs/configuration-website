@@ -1,0 +1,14 @@
+﻿
+<div id="connectionStringDialog" class="configDialog">
+    <table id="dialogFieldTable">
+        <tbody>
+            <tr><td>@Html.Label("conDlgName", "Name: ")</td><td>@Html.TextBox("conDlgName")</td></tr>
+
+            <tr><td>@Html.Label("conDlgValue", "Value: ", new { @class = "error" })</td><td>@Html.TextBox("conDlgValue")</td></tr>
+
+            <tr><td>@Html.Label("conDlgModified", "Modified: ")</td><td>@Html.TextBox("conDlgModified", null, new { disabled = "true" })</td></tr>
+
+            <tr><td>@Html.Label("conDlgGroup", "Group: ")</td> <td>@Html.TextBox("conDlgGroup")</td></tr>
+        </tbody>
+    </table>
+</div>

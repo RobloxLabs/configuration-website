@@ -1,0 +1,90 @@
+﻿@model ConfigListViewModel
+
+@section scripts {
+    @Scripts.Render("~/bundles/config")
+    @Styles.Render("~/bundles/config-styles")
+}
+
+@{
+    ViewBag.Title = "Config Search";
+}
+
+@Html.Partial("~/Views/Config/GroupNamesArrayScript.cshtml", Model.ConfigGroupNames)
+
+<div id="alertDiv" class="alert" role="button"><span id="alertDivText"></span></div>
+<div class="row">
+    <div class="col-xs-6" style="float: left; padding-right: 25px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display: inline-block">
+                    @ViewBag.Title
+                </h3>
+            </div>
+
+            <div class="panel-body" id="enqueue-deployment-container">
+                @using (Html.BeginForm("Search", "Config", FormMethod.Post, new { id = "searchForm" }))
+                {
+                    <div class="col-xs-6">
+                        <div class="form-group form-group-sm select2-outer">
+                            <label for="GroupName">Group Name</label>
+                            <button type="button" id="resetSelectionButton" class="btn btn-default btn-xs">X</button>
+                            @Html.DropDownList("GroupName", Model.ConfigGroupSelectList)
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="configListDisplaySwitch">Search Type</label>
+                            <br />
+                            <div id="configListDisplaySwitch" class="btn-group" data-toggle="buttons">
+                                <a class="btn btn-default active" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">
+                                    <input type="radio" name="options" id="settingsRadioButton" checked> Settings
+                                </a>
+                                <a class="btn btn-default" href="#connectionStrings" aria-controls="connectionStrings" role="tab" data-toggle="tab">
+                                    <input type="radio" name="options" id="connectionStringsRadioButton" checked> Connection Strings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group form-group-sm">
+                            <label for="NamePattern">Name Pattern</label>
+                            <button type="button" id="ClearButton" class="btn btn-default btn-xs">X</button>
+                            @Html.TextBox("NamePattern", null, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="ValuePattern">Value Pattern</label>
+                            @Html.TextBox("ValuePattern", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 text-info">
+        <ul>
+            <li>Searching is confined to the current environment's config database.</li>
+            <li>Searching is done using name and value regex patterns.</li>
+            <li>A maximum of 50 results per search are displayed.</li>
+            <li>Once unmasked, a value will remain unmasked until the table is reloaded.</li>
+            <li>The Group, Name, Value, and Comment columns are all truncated.</li>
+            <li>Once created, the Name, Type, and Group of a setting cannot be changed.</li>
+            <li>Click the clipboard icons to copy the value of the associated setting.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Nav tabs -->
+<!-- >ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+    <li role="presentation"><a href="#connectionStrings" aria-controls="connectionStrings" role="tab" data-toggle="tab">Connection Strings</a></li>
+</ul-->
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="settings">
+        <div id="settingsResultsDiv" class="resultsContainer"></div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="connectionStrings">
+        <div id="connectionStringsResultsDiv" class="resultsContainer"></div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Settings/Dialog.cshtml")
+@Html.Partial("~/Views/ConnectionStrings/Dialog.cshtml")

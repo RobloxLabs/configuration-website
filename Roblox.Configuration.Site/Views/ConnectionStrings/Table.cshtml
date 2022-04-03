@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Roblox.Configuration.Site.Models.Configuration.ConnectionStringModel>
+
+@Model.Count() results
+<table id="connectionStringsResults" class="table table-bordered table-hover settingsTable">
+    <thead>
+        <tr>
+            <th>ID <button id="CreateNewConnectionButton" class="btn btn-default btn-xs pull-right" title="Create new connection string"><span class="glyphicon glyphicon-plus"></span></button></th>
+            <th>Actions</th>
+            <th>Group</th>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.Partial("~/Views/ConnectionStrings/Row.cshtml", item)
+        }
+    </tbody>
+</table>

@@ -1,17 +1,24 @@
 ﻿using System;
+using Roblox.Configuration.Site.Clients.ConfigurationService;
 
 namespace Roblox.Configuration.Site.Models.Configuration
 {
-    public class ConnectionStringModel
+    public class ConnectionStringModel : ConnectionString
     {
-        public int Id { get; set; }
+        public string LastModified { get { return Updated.ToString(); } }
 
-        public string GroupName { get; set; }
+        public ConnectionStringModel()
+        {
+            Updated = DateTime.MinValue;
+        }
 
-        public string Name { get; set; }
-
-        public string Value { get; set; }
-
-        public DateTime Updated { get; set; }
+        public ConnectionStringModel(ConnectionString cs)
+        {
+            Id = cs.Id;
+            GroupName = cs.GroupName;
+            Name = cs.Name;
+            Value = cs.Value;
+            Updated = cs.Updated;
+        }
     }
 }

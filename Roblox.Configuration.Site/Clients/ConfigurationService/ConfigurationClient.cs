@@ -44,7 +44,7 @@ namespace Roblox.Configuration.Site.Clients.ConfigurationService
         private IEnumerable<KeyValuePair<string, object>> ConstructCreateConnectionStringRequest(string groupName, string connectionStringName, string value, DateTime created)
         {
             yield return new KeyValuePair<string, object>("groupName", groupName);
-            yield return new KeyValuePair<string, object>("connectionStringName", connectionStringName);
+            yield return new KeyValuePair<string, object>("name", connectionStringName);
             yield return new KeyValuePair<string, object>("value", value);
             yield return new KeyValuePair<string, object>("created", created);
             yield break;
@@ -53,7 +53,7 @@ namespace Roblox.Configuration.Site.Clients.ConfigurationService
         private IEnumerable<KeyValuePair<string, object>> ConstructSetConnectionStringRequest(string groupName, string connectionStringName, string value, DateTime updated)
         {
             yield return new KeyValuePair<string, object>("groupName", groupName);
-            yield return new KeyValuePair<string, object>("connectionStringName", connectionStringName);
+            yield return new KeyValuePair<string, object>("name", connectionStringName);
             yield return new KeyValuePair<string, object>("value", value);
             yield return new KeyValuePair<string, object>("updated", updated);
             yield break;

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Roblox.Configuration.Site.ViewModels.Configuration;
 using Roblox.Configuration.Site.Models.Configuration;
 using Roblox.Configuration.Site.Clients.ConfigurationService;
+using Roblox.Configuration.Site.ModelFactories.Configuration;
 
 namespace Roblox.Configuration.Site.Controllers
 {
@@ -13,22 +15,45 @@ namespace Roblox.Configuration.Site.Controllers
     public class ConfigController : Controller
     {
 
+        // GET: Config/Search
+        [HttpGet]
+        public ActionResult Search()
+        {
+            IEnumerable<string> groupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0);
+
+            var viewModel = new ConfigListViewModel
+            {
+                ConfigGroupNames = groupNames.Prepend("*")
+            };
+
+            return View(viewModel);
+        }
+
         // GET: Config/GetSettingsHtmlAjax?groupName=Roblox.Properties.Settings
         [HttpGet]
         public ActionResult GetSettingsHtmlAjax(string groupName, string namePattern, string valuePattern)
         {
-            IEnumerable<Setting> settings = Enumerable.Empty<Setting>();
-
-            if (!string.IsNullOrEmpty(groupName))
-                settings = MvcApplication.ConfigurationClient.GetSettings(
+            return PartialView(
+                "~/Views/Settings/Table.cshtml",
+                SettingModelFactory.GetSettings(
                     groupName,  // Group name
                     50,         // Page size
                     0           // Page number
-                );
+                )
+            );
+        }
 
+        // GET: Config/GetConnectionStringsHtmlAjax?groupName=Roblox.Properties.Settings
+        [HttpGet]
+        public ActionResult GetConnectionStringsHtmlAjax(string groupName, string namePattern, string valuePattern)
+        {
             return PartialView(
-                "~/Views/Settings/Table.cshtml",
-                settings
+                "~/Views/ConnectionStrings/Table.cshtml",
+                ConnectionStringModelFactory.GetConnectionStrings(
+                    groupName,  // Group name
+                    50,         // Page size
+                    0           // Page number
+                )
             );
         }
 
@@ -41,7 +66,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
+            SettingModel settingModel = (SettingModel)MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
             if (settingModel == null)
                 return new HttpNotFoundResult("Setting not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
@@ -56,7 +81,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName);
+            SettingModel settingModel = new SettingModel(MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName));
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -67,10 +92,50 @@ namespace Roblox.Configuration.Site.Controllers
             if (!id.HasValue)
                 throw new ArgumentNullException("ID");
 
-            SettingModel settingModel = MvcApplication.ConfigurationClient.GetSetting(id.Value);
-            if (settingModel == null)
+            SettingModel model = new SettingModel(MvcApplication.ConfigurationClient.GetSetting(id.Value));
+            if (model == null)
                 return new HttpNotFoundResult("Setting with ID " + id + " not found");
-            return Json(settingModel, JsonRequestBehavior.AllowGet);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: Config/GetConnectionStringAjax?id=1
+        [HttpGet]
+        public ActionResult GetConnectionStringAjax(int? id)
+        {
+            if (!id.HasValue)
+                throw new ArgumentNullException("ID");
+
+            ConnectionStringModel model = new ConnectionStringModel(MvcApplication.ConfigurationClient.GetConnectionString(id.Value));
+            if (model == null)
+                return new HttpNotFoundResult("Connection string with ID " + id + " not found");
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: Config/TestConnectionStringAjax
+        [HttpPost]
+        public ActionResult TestConnectionStringAjax(int? id, string value)
+        {
+            var response = new ValidationResponseModel
+            {
+                Success = true,
+                Message = "Success!"
+            };
+
+            try
+            {
+                if (!id.HasValue)
+                    throw new ArgumentNullException("ID");
+
+                // TODO: Test connection string
+
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Config/GetTimeSpan
@@ -113,6 +178,27 @@ namespace Roblox.Configuration.Site.Controllers
             }
         }
 
+        // POST: Config/DeleteConnectionStringAjax
+        [HttpPost]
+        public ActionResult DeleteConnectionStringAjax(int? id)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    throw new ArgumentNullException("ID");
+
+                MvcApplication.ConfigurationClient.DeleteConnectionString(id.Value);
+
+                // Success
+                return Content("Successfully deleted connection string!");
+            }
+            catch
+            {
+                // Error
+                return Content("");
+            }
+        }
+
         // POST: Config/SetSettingAjax
         [HttpPost]
         public ActionResult SetSettingAjax(SettingModel setting)
@@ -140,8 +226,8 @@ namespace Roblox.Configuration.Site.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(setting.Value))
-                    throw new ArgumentNullException("Value");
+                /*if (string.IsNullOrEmpty(setting.Value))
+                    throw new ArgumentNullException("Value");*/
 
                 if (setting.Id > 0)
                 {
@@ -149,7 +235,7 @@ namespace Roblox.Configuration.Site.Controllers
                     // TODO: Can we take the non-updates values and pass them in anyways without updating them?
                     // Maybe config service will only use them for identification?
                     Setting oldSetting = MvcApplication.ConfigurationClient.GetSetting(setting.Id);
-                    setting.Group = oldSetting.GroupName;
+                    setting.GroupName = oldSetting.GroupName;
                     setting.Type = oldSetting.Type;
                     setting.Name = oldSetting.Name;
                     MvcApplication.ConfigurationClient.SetSetting(setting);
@@ -163,6 +249,43 @@ namespace Roblox.Configuration.Site.Controllers
             catch (Exception ex)
             {
                 response.SettingSaved = false;
+                response.Message = ex.Message;
+            }
+
+            return Json(response);
+        }
+
+        // POST: Config/SetConnectionStringAjax
+        [HttpPost]
+        public ActionResult SetConnectionStringAjax(ConnectionStringModel connectionString)
+        {
+            var response = new ValidationResponseModel
+            {
+                Success = true,
+                Message = "Success!"
+            };
+
+            try
+            {
+                if (connectionString.Id > 0)
+                {
+                    // Update connection string
+                    // TODO: Can we take the non-updates values and pass them in anyways without updating them?
+                    // Maybe config service will only use them for identification?
+                    ConnectionString oldCS = MvcApplication.ConfigurationClient.GetConnectionString(connectionString.Id);
+                    connectionString.GroupName = oldCS.GroupName;
+                    connectionString.Name = oldCS.Name;
+                    MvcApplication.ConfigurationClient.SetConnectionString(connectionString);
+                }
+                else
+                {
+                    // Create a brand new setting
+                    MvcApplication.ConfigurationClient.CreateConnectionString(connectionString);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
                 response.Message = ex.Message;
             }
 

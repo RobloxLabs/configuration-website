@@ -110,6 +110,11 @@ $(function () {
             return false;
         }
 
+        var updateResults = function () {
+            updateSettingResults();
+            updateConnectionsResults();
+        }
+
         var requestCounter = 0;
         var updateSettingResultsMulti = function () {
             $("#settingsResultsDiv").html("");
@@ -169,7 +174,7 @@ $(function () {
                 return;
             } //too short
             var url = "/Config/GetSettingsHtmlAjax?" + $.param({ GroupName: groupName, NamePattern: namePattern, ValuePattern: valuePattern });
-            // I can't being to wrap my head around why they were doing these requests twice...
+            // I can't begin to wrap my head around why they were doing these requests twice...
             // They probably got some underpaid intern to do this shit
             /*$.get(url, function (response) {
                 if (requestCount === requestCounter) {
@@ -228,7 +233,7 @@ $(function () {
                 target.attr('selected', 'selected');
                 $("#NamePattern").val(name);
                 $("#ValuePattern").val(value);
-                updateSettingResults();
+                updateResults();
             }
         }
 
@@ -324,13 +329,13 @@ $(function () {
                         id: editSettingDialog.currentId,
                         value: $("#dlgValue").val(),
                         comment: $("#dlgComment").val(),
-                        env: $("#dlgIsEnvSpecific").prop("checked"),
+                        isEnvSpecific: $("#dlgIsEnvSpecific").prop("checked"),
                         isMasked: $("#dlgIsMasked").prop("checked"),
                         isValueSameForAllTestEnvironments: isThereHiddenRow > 0 ? $(".hiddenRow").find("input#dlgIsValueSameForAllTestEnvironments").prop("checked") : $("#dlgIsValueSameForAllTestEnvironments").prop("checked"),
                         isValueUniqueForProduction: isThereHiddenRow > 0 ? $(".hiddenRow").find("input#dlgIsValueUniqueForProduction").prop("checked") : $("#dlgIsValueUniqueForProduction").prop("checked"),
 
                         // following settings will NOT get updated on save
-                        group: $("#dlgGroup").val(),
+                        groupName: $("#dlgGroup").val(),
                         type: $("#dlgType").val(),
                         name: $("#dlgName").val()
                     };
@@ -343,14 +348,14 @@ $(function () {
                     var url = getConfigUrlPrefix() + "/SetSettingAjax";
                     $.post(url, params, function (response) {
                         if (response.SettingSaved) {
-                            if (newSetting && $.inArray(params.group, window.groupNames) == -1) {
-                                window.groupNames.push(params.group);
-                                $("#GroupName").append('<option>' + params.group + '</option>');
-                                $("#GroupName").val(params.group);
+                            if (newSetting && $.inArray(params.groupName, window.groupNames) == -1) {
+                                window.groupNames.push(params.groupName);
+                                $("#GroupName").append('<option>' + params.groupName + '</option>');
+                                $("#GroupName").val(params.groupName);
                             }
 
                             var message = "<b>Setting Saved!</b><br>";
-                            message += "<b>Setting Group</b>: " + params.group + "<br>";
+                            message += "<b>Setting Group</b>: " + params.groupName + "<br>";
                             message += "<b>Setting Name</b>: " + params.name + "<br>";
                             if (response.Message !== undefined && response.Message !== "" && response.Message !== null) {
                                 message += "But there was an exception creating the system event for the change <br>";
@@ -703,7 +708,7 @@ $(function () {
                 return false;
             });
 
-            $(document).on("click", "#settingsResultsDiv .settingsDeleteButton", function () {
+            $("#settingsResultsDiv").on("click", ".settingsDeleteButton", function () {
                 /*if (!Roblox.Admi.SettingsSemaphore.doesUserHoldLockForType(Roblox.Admi.SettingsSemaphore.Types.Platform)) {
                     return false;
                 }*/
@@ -716,14 +721,14 @@ $(function () {
 
             $("span[data-make-button]").button();
 
-            $("#CreateNewSettingButton").click(function () {
+            $("#settingsResultsDiv").on("click", "#CreateNewSettingButton", function () {
                 /*if (!Roblox.Admi.SettingsSemaphore.doesUserHoldLockForType(Roblox.Admi.SettingsSemaphore.Types.Platform)) {
                     return false;
                 }*/
                 // default to currently selected group
                 var defaultName = $("#GroupName").val();
                 if (defaultName == "*") {
-                    defaultName = ""; // do not show * when all grups is selected in the drop down
+                    defaultName = ""; // do not show * when all groups is selected in the drop down
                 }
                 $("#dlgGroup").attr("disabled", false).val(defaultName);
                 $("#dlgType").attr("disabled", false).val("");
@@ -818,29 +823,29 @@ $(function () {
 
             $("#GroupName").change(function (evt) {
                 if (this.value) {
-                    updateSettingResults();
+                    updateResults();
                 }
                 putSearchTextIntoAnchortext();
             });
 
             $("#NamePattern").keyup(function (evt) {
                 if (evt.keyCode === 13) {
-                    updateSettingResults();
+                    updateResults();
                 }
                 else {
                     delay(function () {
-                        updateSettingResults();
+                        updateResults();
                     }, 200);
                 }
             });
 
             $("#ValuePattern").keyup(function (evt) {
                 if (evt.keyCode === 13) {
-                    updateSettingResults();
+                    updateResults();
                 }
                 else {
                     delay(function () {
-                        updateSettingResults();
+                        updateResults();
                     }, 200);
                 }
             });
@@ -852,7 +857,7 @@ $(function () {
             $("#ClearButton").click(function (evt) {
                 $("#NamePattern").val("");
                 $("#ValuePattern").val("");
-                updateSettingResults();
+                updateResults();
             });
 
             var dlgNameField = $("#dlgName");
@@ -925,7 +930,7 @@ $(function () {
 
                     if (params.id == -1) {
                         // for new settings, append extra parameters
-                        params.group = group;
+                        params.groupName = group;
                         params.name = name;
                     }
 
@@ -948,8 +953,8 @@ $(function () {
             }
         });
 
-        $(document).on("click", "#connectionStringsResultsDiv .connectionStringEditButton", function () {
-            var id = $(this).closest("tr").data("id");
+        $("#connectionStringsResultsDiv").on("click", ".connectionStringEditButton", function () {
+            var id = $(this).closest("tr").data("csid");
             $.getJSON("/Config/GetConnectionStringAjax?id=" + id, function (s) {
                 $("#conDlgGroup").attr("disabled", true).val(s.GroupName);
                 $("#conDlgName").attr("disabled", true).val(s.Name);
@@ -963,17 +968,30 @@ $(function () {
             return false;
         });
 
-        $(document).on("click", "#connectionStringsResultsDiv .connectionStringDeleteButton", function () {
-            var id = $(this).closest("tr").data("id");
+        $("#connectionStringsResultsDiv").on("click", ".connectionStringDeleteButton", function () {
+            var id = $(this).closest("tr").data("csid");
             return showDeleteDialog("/Config/DeleteConnectionStringAjax", id, "Are you sure you want to delete this connection string?", updateConnectionsResults);
         });
 
         function updateConnectionsResults() {
-            $("#connectionStringsResultsDiv").load("/Config/GetConnectionStringsHtmlAjax");
+            var namePattern = $("#NamePattern").val();
+            var valuePattern = $("#ValuePattern").val();
+            var groupName = $("#GroupName").val();
+            if (groupName === "*" && namePattern.length < 2 && valuePattern.length < 2) {
+                $("#connectionStringsResultsDiv").html("");
+                return;
+            } //too short
+            var url = "/Config/GetConnectionStringsHtmlAjax?" + $.param({ GroupName: groupName, NamePattern: namePattern, ValuePattern: valuePattern });
+            $("#connectionStringsResultsDiv").load(url);
         }
 
-        $("#CreateNewConnectionButton").click(function () {
-            $("#conDlgGroup").attr("disabled", false).val("");
+        $("#connectionStringsResultsDiv").on("click", "#CreateNewConnectionButton", function () {
+            // default to currently selected group
+            var defaultName = $("#GroupName").val();
+            if (defaultName == "*") {
+                defaultName = ""; // do not show * when all groups is selected in the drop down
+            }
+            $("#conDlgGroup").attr("disabled", false).val(defaultName);
             $("#conDlgName").attr("disabled", false).val("");
             $("#conDlgModified").val("Set Automatically");
             $("#conDlgValue").val("");
@@ -1124,7 +1142,7 @@ $(function () {
             });
         }
 
-        updateConnectionsResults();
+        //updateConnectionsResults();
 
         return {
             init: init

@@ -14,7 +14,9 @@
 
             <div class="container-fluid">
                 <div class="navbar-header">
-                    @Html.ActionLink("Roblox Configuration", "Index", "Default", null, new { @class = "navbar-brand" })
+                    <a href="@Url.Action("Index", "Default")" title="ROBLOX Administration" class="navbar-brand" style="padding-top:0px">
+                        <img alt="ROBLOX Logo" src="@Url.Content("~/Images/logo.png")" />
+                    </a>
                 </div>
 
                 <ul class="nav navbar-nav">
@@ -24,24 +26,8 @@
                     <li class="">
                         <a href="/system-events">System Events</a>
                     </li>
-                    <li class="@Html.IsActive("Settings")">
-                        @Html.ActionLink("Settings", "Search", "Settings")
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Connection Strings <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/connection-strings/list">List Settings</a>
-                            </li>
-                            <li>
-                                <a href="/connection-strings/create">Create Setting</a>
-                            </li>
-                            <li>
-                                <a href="/connection-strings/get">Get Setting</a>
-                            </li>
-                        </ul>
+                    <li class="@Html.IsActive("Config")">
+                        @Html.ActionLink("Search", "Search", "Config")
                     </li>
                 </ul>
 

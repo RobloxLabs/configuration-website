@@ -1,0 +1,22 @@
+﻿@model Roblox.Configuration.Site.Models.Configuration.ConnectionStringModel
+
+<tr data-csid="@Model.Id">
+    <td>@Model.Id</td>
+    <td class="a" style="width: 75px">
+        <div class="btn-group">
+            <button type="button" class="connectionStringEditButton btn btn-primary btn-xs">Edit</button>
+            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Edit", "", null, new { href = "#", @class = "connectionStringEditButton" })</li>
+                <li>@Html.ActionLink("Delete", "", null, new { href = "#", @class = "connectionStringDeleteButton" })</li>
+            </ul>
+        </div>
+    </td>
+    <td class="g"><div class="g truncated">@Model.GroupName</div></td>
+    <td class="n"><div class="n truncated" title="@Model.Name">@Model.Name</div></td>
+    <td class="cs"><div class="cs truncated" title="@Model.Value">@Model.Value</div></td>
+    <td>@Html.DisplayFor(modelItem => Model.Updated)</td>
+</tr>

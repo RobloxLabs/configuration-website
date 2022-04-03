@@ -1,0 +1,65 @@
+﻿@model ConfigListViewModel
+
+@section scripts {
+    @Scripts.Render("~/bundles/config")
+    @Styles.Render("~/bundles/config-styles")
+}
+
+@{
+    ViewBag.Title = "Connection String Search";
+}
+
+@Html.Partial("~/Views/Config/GroupNamesArrayScript.cshtml", Model.ConfigGroupNames)
+
+<div id="alertDiv" class="alert" role="button"><span id="alertDivText"></span></div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @ViewBag.Title <button id="CreateNewConnectionButton" class="btn btn-default btn-xs">Create Connection String</button>
+        <div class="pull-right">@ViewBag.CurrentTimestamp</div>
+    </div>
+    <div class="panel-body">
+        <div id="select2help" class="glyphicon glyphicon-question-sign" style="display: inline-block; float: right; font-size: 24px;"></div>
+        <div id="select2help-details" class="select2help-popover" style="display: none; padding-bottom: 40px;">
+            <h2>Title</h2>
+            Test Test Test
+            <h2 style="margin-top: 10px;">Another Title</h2>
+            More Testing!!!
+        </div>
+        @using (Html.BeginForm("Search", "ConnectionStrings", FormMethod.Post, new { id = "searchForm" }))
+        {
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="form-group select2-outer">
+                    <label for="GroupName">Group Name</label>
+                    <button type="button" id="resetSelectionButton" class="btn btn-default btn-xs">X</button>
+                    @Html.DropDownList("GroupName", Model.ConfigGroupSelectList)
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label for="NamePattern">Name Pattern</label>
+                    <button type="button" id="ClearButton" class="btn btn-default btn-xs">X</button>
+                    @Html.TextBox("NamePattern", null, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="form-group">
+                    
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label for="ValuePattern">Value Pattern</label>
+                    @Html.TextBox("ValuePattern", null, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<div id="connectionStringsResultsDiv" class="resultsContainer"></div>
+
+@Html.Partial("Dialog")

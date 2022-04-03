@@ -6,11 +6,11 @@ using Roblox.Configuration.Site.ViewModels.Configuration;
 namespace Roblox.Configuration.Site.Controllers
 {
     [Authorize]
-    [RoutePrefix("Settings")]
-    //[RoutePrefix("settings")]
-    public class SettingsController : Controller
+    [RoutePrefix("ConnectionStrings")]
+    //[RoutePrefix("connection-strings")]
+    public class ConnectionStringsController : Controller
     {
-        // GET: Settings/Search
+        // GET: ConnectionStrings/Search
         [HttpGet]
         //[Route("list")]
         public ActionResult Search()

@@ -1,6 +1,6 @@
 ﻿/*
-    Lifted from "AdminWebsite/UnsecureContent/css/master.css"
-    Modified by Brent on 2-8-2022
+    Lifted from "InternalWebsites/AdminWebsite/UnsecureContent/css/master.css"
+    Modified by Brent on 2-8-2022 for configuration website
 */
 /* mvc pages */
 
@@ -37,18 +37,18 @@
 {
     border-collapse: collapse;
     font-size: 12px;
-}
+}*/
 
 .settingsTable td {
     white-space: nowrap;
 }
 
-.settingsTable td div 
+.settingsTable td .truncated
 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}*/
+}
 
 .infoMessage {
     display: inline-block;
@@ -62,9 +62,8 @@
 }
 
 /* name column */
-.settingsTable .n 
-{
-    min-width: 270px;
+.settingsTable .n {
+    width: 270px;
 }
 
 /* Highlight results from filter*/
@@ -75,13 +74,13 @@
 
 /* value column */
 .settingsTable .valueCell {
-    min-width: 300px;
+    width: 300px;
     margin: auto;
 }
 
 /* actual value */
 .settingsTable .value {
-    min-width: 210px;
+    width: 210px;
     float: left;
 }
 
@@ -107,61 +106,58 @@
 }
 
 /* secret value */
-.settingsTable .secret
-{
+.settingsTable .secret {
     color: red;
 }
 
 /* show masked value button*/
-.settingsTable .ui-button .ui-button-text
-{
+.settingsTable .ui-button .ui-button-text {
     line-height: 0.5;
     font-size: 10px;
 }
 
 /* connection string */
-.settingsTable .cs
-{
-    min-width: 400px;
+.settingsTable .cs {
+    width: 400px;
 }
 
 /* comment column */
 .settingsTable .c {
-    min-width: 280px;
+    width: 280px;
 }
 
 /* group column in connection strings */
 .settingsTable .g {
-    min-width: 300px;
+    width: 300px;
 }
 
 /* group column trimmed */
 .settingsTable .gt {
-    min-width: 200px;
+    width: 200px;
 }
 
 /* type column */
 .settingsTable .t {
-    min-width: 110px;
+    width: 110px;
 }
 
-.settingsTable td,
+/*.settingsTable td,
 .settingsTable th {
-    border: 1px solid #1c1e22;
+    border: 1px solid #999999;
 }
 
-/*.settingsTable td {
+.settingsTable td {
     padding: 4px;
-}*/
+}
 
-/*.settingsTable th {
+.settingsTable th {
     padding: 5px 4px;
     color: black;
-}*/
+}
 
 .settingsTable tr:hover {
-    background-color: #1c1e22
-}
+    background-color: #DDDDDD
+}*/
 
 .configDialog {
     display: none;

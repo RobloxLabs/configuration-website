@@ -1,9 +1,10 @@
-﻿@model IEnumerable<Roblox.Configuration.Site.Clients.ConfigurationService.Setting>
+﻿@model IEnumerable<Roblox.Configuration.Site.Models.Configuration.SettingModel>
 
-<table id="settingsResults" class="table settingsTable">
+@Model.Count() results
+<table id="settingsResults" class="table table-bordered table-hover settingsTable">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>ID <button id="CreateNewSettingButton" class="btn btn-default btn-xs pull-right" title="Create new setting"><span class="glyphicon glyphicon-plus"></span></button></th>
             <th>Actions</th>
             <th>Group</th>
             <th>Name</th>
