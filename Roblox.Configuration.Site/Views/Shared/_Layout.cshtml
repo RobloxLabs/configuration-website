@@ -14,10 +14,17 @@
 
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a href="@Url.Action("Index", "Default")" title="ROBLOX Administration" class="navbar-brand" style="padding-top:0px">
-                        <img alt="ROBLOX Logo" src="@Url.Content("~/Images/logo.png")" />
-                    </a>
-                </div>
+                    @if (Roblox.Configuration.Site.Properties.Settings.Default.AdminSiteLogoEnabled)
+                    {
+                        <a href="@Url.Action("Index", "Default")" title="ROBLOX Administration" class="navbar-brand" style="padding-top:0px">
+                            <img alt="ROBLOX Logo" src="@Url.Content("~/Images/logo.png")" />
+                        </a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Roblox Configuration", "Index", "Default", null, new { @class = "navbar-brand" })
+                    }
+                    </div>
 
                 <ul class="nav navbar-nav">
                     <li class="@Html.IsActive("Default", "ListConfigurationGroups")">
