@@ -286,7 +286,7 @@ namespace Roblox.Configuration.Site.Controllers
             catch (Exception ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = "Exception:" + ex.Message + (ex.InnerException != null ? ("\nInner Exception: " + ex.InnerException.Message) : "");
             }
 
             return Json(response);

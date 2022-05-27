@@ -38,7 +38,7 @@
             </div>
         }
         <div class="copyValue @(Model.IsMasked ? "masked" : "")">
-            <a href="javascript:navigator.clipboard.writeText('@HttpUtility.JavaScriptStringEncode(Model.Value)')" title="@("Copy this:\n " + Model.Value))" class="copyIcon">
+            <a href="javascript:navigator.clipboard.writeText('@HttpUtility.JavaScriptStringEncode(Model.Value)')" title="@("Copy this:\n " + Model.Value)" class="copyIcon">
                 <span class="copyToClipboardIcon" />
             </a>
         </div>
