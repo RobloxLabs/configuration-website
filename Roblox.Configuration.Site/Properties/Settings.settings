@@ -8,5 +8,17 @@
     <Setting Name="AdminSiteLogoEnabled" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="LogName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">RCS2.Roblox.Configuration.Site</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="Roblox.EventLog.LogLevel" Scope="Application">
+      <Value Profile="(Default)">Verbose</Value>
+    </Setting>
+    <Setting Name="ConfigurationServiceUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConfigurationServiceApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

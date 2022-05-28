@@ -1,5 +1,5 @@
 ﻿using System;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
+using Roblox.Configuration.Client;
 
 namespace Roblox.Configuration.Site.Models.Configuration
 {
@@ -21,7 +21,7 @@ namespace Roblox.Configuration.Site.Models.Configuration
             IsValueUniqueForProduction = false;
         }
 
-        public SettingModel(Setting s)
+        public SettingModel(Client.ISetting s)
         {
             Id = s.Id;
             GroupName = s.GroupName;
@@ -34,6 +34,6 @@ namespace Roblox.Configuration.Site.Models.Configuration
             IsMasked = s.IsMasked;
             IsValueSameForAllTestEnvironments = s.IsValueSameForAllTestEnvironments;
             IsValueUniqueForProduction = s.IsValueUniqueForProduction;
-	    }
+        }
     }
 }

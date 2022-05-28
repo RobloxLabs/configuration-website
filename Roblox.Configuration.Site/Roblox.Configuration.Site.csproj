@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -149,6 +150,15 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Abstractions, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net47\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net47\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mvc5, Version=1.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc5.1.4.0\lib\net45\Unity.Mvc5.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -167,11 +177,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Clients\ConfigurationService\ConfigurationClient.cs" />
-    <Compile Include="Clients\ConfigurationService\ConfigurationServiceErrorResponse.cs" />
-    <Compile Include="Clients\ConfigurationService\ConnectionString.cs" />
-    <Compile Include="Clients\ConfigurationService\SetPropertyRequest.cs" />
-    <Compile Include="Clients\ConfigurationService\Setting.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
@@ -280,9 +286,21 @@
       <Project>{dae6fab3-f9f4-444a-9235-644d5b97e360}</Project>
       <Name>Roblox.ApiClientBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Assemblies\ApiClients\Roblox.Configuration.Client\Roblox.Configuration.Client.csproj">
+      <Project>{d9ac6198-f1d6-4adf-9b84-ab458e6ae4c6}</Project>
+      <Name>Roblox.Configuration.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Assemblies\Configuration\Roblox.Configuration\Roblox.Configuration.csproj">
       <Project>{6316d070-7193-4f41-9b70-f13d6875563f}</Project>
       <Name>Roblox.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Assemblies\EventLog\Roblox.EventLog\Roblox.EventLog.csproj">
+      <Project>{6b942852-0b51-42e6-9142-cf0c583e9b4f}</Project>
+      <Name>Roblox.EventLog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Assemblies\Windows\Roblox.ActiveDirectory\Roblox.ActiveDirectory.csproj">
+      <Project>{35fccb7e-f57d-427f-a1f4-3549571cf2c1}</Project>
+      <Name>Roblox.ActiveDirectory</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -5,8 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using Roblox.Configuration.Site.ViewModels.Configuration;
 using Roblox.Configuration.Site.Models.Configuration;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
 using Roblox.Configuration.Site.ModelFactories.Configuration;
+using Roblox.EventLog;
+using Roblox.Configuration.Client;
 
 namespace Roblox.Configuration.Site.Controllers
 {
@@ -14,12 +15,24 @@ namespace Roblox.Configuration.Site.Controllers
     [RoutePrefix("Config")]
     public class ConfigController : Controller
     {
+        private readonly ILogger _Logger;
+        private readonly IConfigurationClient _ConfigurationClient;
+        private readonly ConnectionStringModelFactory _ConnectionStringModelFactory;
+        private readonly SettingModelFactory _SettingModelFactory;
+
+        public ConfigController(ILogger logger, IConfigurationClient configurationClient, ConnectionStringModelFactory connectionStringModelFactory, SettingModelFactory settingModelFactory)
+        {
+            _Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _ConfigurationClient = configurationClient ?? throw new ArgumentNullException(nameof(configurationClient));
+            _ConnectionStringModelFactory = connectionStringModelFactory ?? throw new ArgumentNullException(nameof(connectionStringModelFactory));
+            _SettingModelFactory = settingModelFactory ?? throw new ArgumentNullException(nameof(settingModelFactory));
+        }
 
         // GET: Config/Search
         [HttpGet]
         public ActionResult Search()
         {
-            IEnumerable<string> groupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0);
+            var groupNames = _ConfigurationClient.GetConfigurationGroupNames();
 
             var viewModel = new ConfigListViewModel
             {
@@ -35,7 +48,7 @@ namespace Roblox.Configuration.Site.Controllers
         {
             return PartialView(
                 "~/Views/Settings/Table.cshtml",
-                SettingModelFactory.GetSettings(
+                _SettingModelFactory.GetSettings(
                     groupName,  // Group name
                     50,         // Page size
                     0           // Page number
@@ -49,7 +62,7 @@ namespace Roblox.Configuration.Site.Controllers
         {
             return PartialView(
                 "~/Views/ConnectionStrings/Table.cshtml",
-                ConnectionStringModelFactory.GetConnectionStrings(
+                _ConnectionStringModelFactory.GetConnectionStrings(
                     groupName,  // Group name
                     50,         // Page size
                     0           // Page number
@@ -66,7 +79,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = (SettingModel)MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
+            SettingModel settingModel = (SettingModel)_ConfigurationClient.GetSetting(settingGroupName, settingName);
             if (settingModel == null)
                 return new HttpNotFoundResult("Setting not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
@@ -81,7 +94,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = new SettingModel(MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName));
+            SettingModel settingModel = new SettingModel(_ConfigurationClient.GetSetting(settingGroupName, settingName));
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -92,7 +105,7 @@ namespace Roblox.Configuration.Site.Controllers
             if (!id.HasValue)
                 throw new ArgumentNullException("ID");
 
-            SettingModel model = new SettingModel(MvcApplication.ConfigurationClient.GetSetting(id.Value));
+            SettingModel model = new SettingModel(_ConfigurationClient.GetSetting(id.Value));
             if (model == null)
                 return new HttpNotFoundResult("Setting with ID " + id + " not found");
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -105,7 +118,7 @@ namespace Roblox.Configuration.Site.Controllers
             if (!id.HasValue)
                 throw new ArgumentNullException("ID");
 
-            ConnectionStringModel model = new ConnectionStringModel(MvcApplication.ConfigurationClient.GetConnectionString(id.Value));
+            var model = new ConnectionStringModel(_ConfigurationClient.GetConnectionString(id.Value));
             if (model == null)
                 return new HttpNotFoundResult("Connection string with ID " + id + " not found");
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -166,7 +179,7 @@ namespace Roblox.Configuration.Site.Controllers
                 if (!id.HasValue)
                     throw new ArgumentNullException("ID");
 
-                MvcApplication.ConfigurationClient.DeleteSetting(id.Value);
+                _ConfigurationClient.DeleteSetting(id.Value);
 
                 // Success
                 return Content("Successfully deleted setting!");
@@ -187,7 +200,7 @@ namespace Roblox.Configuration.Site.Controllers
                 if (!id.HasValue)
                     throw new ArgumentNullException("ID");
 
-                MvcApplication.ConfigurationClient.DeleteConnectionString(id.Value);
+                _ConfigurationClient.DeleteConnectionString(id.Value);
 
                 // Success
                 return Content("Successfully deleted connection string!");
@@ -234,16 +247,16 @@ namespace Roblox.Configuration.Site.Controllers
                     // Update setting
                     // TODO: Can we take the non-updates values and pass them in anyways without updating them?
                     // Maybe config service will only use them for identification?
-                    Setting oldSetting = MvcApplication.ConfigurationClient.GetSetting(setting.Id);
+                    var oldSetting = _ConfigurationClient.GetSetting(setting.Id);
                     setting.GroupName = oldSetting.GroupName;
                     setting.Type = oldSetting.Type;
                     setting.Name = oldSetting.Name;
-                    MvcApplication.ConfigurationClient.SetSetting(setting);
+                    _ConfigurationClient.SetSetting(setting);
                 }
                 else
                 {
                     // Create a brand new setting
-                    MvcApplication.ConfigurationClient.CreateSetting(setting);
+                    _ConfigurationClient.CreateSetting(setting);
                 }
             }
             catch (Exception ex)
@@ -272,15 +285,15 @@ namespace Roblox.Configuration.Site.Controllers
                     // Update connection string
                     // TODO: Can we take the non-updates values and pass them in anyways without updating them?
                     // Maybe config service will only use them for identification?
-                    ConnectionString oldCS = MvcApplication.ConfigurationClient.GetConnectionString(connectionString.Id);
+                    var oldCS = _ConfigurationClient.GetConnectionString(connectionString.Id);
                     connectionString.GroupName = oldCS.GroupName;
                     connectionString.Name = oldCS.Name;
-                    MvcApplication.ConfigurationClient.SetConnectionString(connectionString);
+                    _ConfigurationClient.SetConnectionString(connectionString);
                 }
                 else
                 {
                     // Create a brand new setting
-                    MvcApplication.ConfigurationClient.CreateConnectionString(connectionString);
+                    _ConfigurationClient.CreateConnectionString(connectionString);
                 }
             }
             catch (Exception ex)
