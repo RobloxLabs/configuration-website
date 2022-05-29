@@ -284,7 +284,7 @@
             title: "Type in a new name for the client",
             callback: function (newNote) {
                 if (!(newNote === null || newNote === '')) {
-                    warningPrompt("Are you sure you want to rename <br/>" + note + " -> " + newNote + "?",
+                    warningPrompt("Are you sure you want to rename <br/><b>" + note + "</b> -> <b>" + newNote + "</b>?",
                         function () { renameClient(isValid, id, newNote); }
                     );
                 }
