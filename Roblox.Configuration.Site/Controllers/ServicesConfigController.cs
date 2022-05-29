@@ -25,11 +25,11 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public void AddClient(string key, string note)
         {
-            Guid guidKey;
-            if (!Guid.TryParse(key, out guidKey))
+            Guid guidKey = Guid.Empty;
+            if (!string.IsNullOrEmpty(key) && !Guid.TryParse(key, out guidKey))
                 throw new ArgumentException("Key isn't a valid GUID");
 
-            Client.AddClient(guidKey, note);
+            Client.AddClient(guidKey != Guid.Empty ? guidKey : (Guid?)null, note);
         }
 
         // POST: ServicesConfig/RemoveClient
@@ -54,9 +54,9 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpGet]
         public ActionResult RevealClientKey(int clientId)
         {
-            //var apiClient = Client.GetApiClient(clientId);
+            var apiClient = Client.GetApiClient(clientId);
 
-            return Content("b9309a51-7b54-458c-ad73-7b2c287497e2"/*apiClient.Key.ToString()*/);
+            return Content(apiClient.Key.ToString());
         }
 
         // GET: ServicesConfig/SearchApiClientIDListByKey
@@ -85,7 +85,7 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public void ToggleClient(bool isValid, int id)
         {
-            Client.ToggleClient(id, isValid);
+            Client.SetClient(id, isValid);
         }
 
         // POST: ServicesConfig/AddService
