@@ -33,8 +33,11 @@
                     <li class="@Html.IsActive("Default", "ListConfigurationGroups")">
                         @Html.ActionLink("Configuration Groups", "ListConfigurationGroups", controllerName: "Default")
                     </li>
+                    <li class="@Html.IsActive("Config", "Search")">
+                        @Html.ActionLink("Configuration Search", "Search", "Config")
+                    </li>
                     <li class="@Html.IsActive("Config")">
-                        @Html.ActionLink("Search", "Search", "Config")
+                        @Html.ActionLink("ApiClient Search", "Search", "ApiClients")
                     </li>
                 </ul>
 

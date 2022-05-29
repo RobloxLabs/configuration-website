@@ -1,0 +1,21 @@
+﻿
+<div id="toggleClientDialog" class="configDialog"></div>
+<div id="duplicateClientDialog" class="configDialog">
+    <table id="dialogFieldTable">
+        <tbody>
+            @Html.Hidden("duplicateTemplateId")
+            @Html.Hidden("duplicateTemplateName")
+
+            <tr><td>@Html.Label("duplicateClientKey", "Key: ")</td><td>@Html.TextBox("duplicateClientKey")</td></tr>
+            <tr><td>@Html.Label("duplicateClientNote", "Note: ")</td><td>@Html.TextBox("duplicateClientNote")</td></tr>
+        </tbody>
+    </table>
+</div>
+<div id="addClientDialog" class="configDialog">
+    <table id="dialogFieldTable">
+        <tbody>
+            <tr><td>@Html.Label("clientKey", "Key: ")</td><td>@Html.TextBox("clientKey")</td></tr>
+            <tr><td>@Html.Label("clientNote", "Note: ")</td><td>@Html.TextBox("clientNote")</td></tr>
+        </tbody>
+    </table>
+</div>

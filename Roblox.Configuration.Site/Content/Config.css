@@ -217,3 +217,18 @@
 #settingsDialog input[type=text] {
     margin-bottom: 3px;
 }
+
+/** styles for services config pages begin ***/
+.authorization-column span,
+.authorization-column a {
+    width: 50px;
+    display: inline-block;
+    text-align: center;
+}
+
+.authorization-column span.selected {
+    font-weight: bold;
+    background-color: #EDEDED;
+    border-radius: 4px;
+}
+/** styles for services config pages end ***/

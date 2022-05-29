@@ -40,5 +40,50 @@ namespace Roblox.Configuration.Site.Properties {
                 return ((bool)(this["AdminSiteLogoEnabled"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6db364ac-d979-4d50-baa4-9ef68ba1e919")]
+        public string ApiControlPlaneApiKey {
+            get {
+                return ((string)(this["ApiControlPlaneApiKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MaxApiClientResults {
+            get {
+                return ((int)(this["MaxApiClientResults"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int MaxConfigGroupNamesResults {
+            get {
+                return ((int)(this["MaxConfigGroupNamesResults"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MaxSettingsResults {
+            get {
+                return ((int)(this["MaxSettingsResults"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MaxConnectionStringResults {
+            get {
+                return ((int)(this["MaxConnectionStringResults"]));
+            }
+        }
     }
 }

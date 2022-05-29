@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Roblox.Configuration.Site.Clients.ConfigurationService;
+using Roblox.ApiControlPlane.Client;
 
 namespace Roblox.Configuration.Site
 {
@@ -14,6 +15,12 @@ namespace Roblox.Configuration.Site
             get { return _ConfigurationClient; }
         }
 
+        private static ApiControlPlaneClient _ApiControlPlaneClient;
+        public static ApiControlPlaneClient ApiControlPlaneClient
+        {
+            get { return _ApiControlPlaneClient; }
+        }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -22,6 +29,10 @@ namespace Roblox.Configuration.Site
 
             _ConfigurationClient = new ConfigurationClient(
                 () => RobloxEnvironment.GetInternalApiServiceEndpoint("configuration")
+            );
+            _ApiControlPlaneClient = new ApiControlPlaneClient(
+                () => RobloxEnvironment.GetInternalApiServiceEndpoint("apicontrolplane"),
+                () => Roblox.Configuration.Site.Properties.Settings.Default.ApiControlPlaneApiKey
             );
         }
     }

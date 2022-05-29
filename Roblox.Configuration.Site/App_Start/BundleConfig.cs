@@ -29,9 +29,6 @@ namespace Roblox.Configuration.Site
             /* Pages */
 
             // ~/Config
-            bundles.Add(new ScriptBundle("~/bundles/config").Include(
-                "~/Scripts/Settings.js"
-            ));
             bundles.Add(new StyleBundle("~/bundles/config-styles").Include(
                 "~/Content/Config.css"
             ));

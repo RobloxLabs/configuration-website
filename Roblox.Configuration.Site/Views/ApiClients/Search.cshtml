@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IApiClient>
+@section scripts {
+    @Scripts.Render("~/Scripts/Services.js")
+    @Styles.Render("~/bundles/config-styles")
+}
+@{
+    ViewBag.Title = "ApiClient Search";
+}
+
+<div id="alertDiv" class="alert" role="button"><span id="alertDivText"></span></div>
+<div class="row">
+    <div class="col-xs-6" style="float: left; padding-right: 25px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display: inline-block">
+                    @ViewBag.Title
+                </h3>
+            </div>
+
+            <div class="panel-body" id="enqueue-deployment-container">
+                <div class="col-xs-6">
+                    <div class="form-group form-group-sm">
+                        <label for="client-search-input">Search</label> <button type="button" class="btn btn-xs btn-default" id="client-search-reset">X</button>
+                        <div class="input-group">
+                            @Html.TextBox("client-search-input", null, new { @class = "form-control", placeholder = "API Client Key (GUID)" })
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-sm btn-default" id="client-search-button"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 text-info">
+        <ul>
+            <li>Searching is confined to the current environment's ApiControlPlane.</li>
+            <li>Searching is done based on API client keys (GUIDs)</li>
+            <li>A maximum of 500 API clients are displayed at one time.</li>
+            <li>All client keys are hidden by default.</li>
+            <li>Once a client's API key is generated, it cannot be changed.</li>
+        </ul>
+    </div>
+</div>
+
+<div>
+    <span id="client-caption"></span>
+    <span id="client-default-number">@Model.Count() clients found.</span>
+    <div id="clientResultsDiv" class="resultsContainer">
+        @Html.Partial("Table", Model)
+    </div>
+</div>
+
+@Html.Partial("Dialog")

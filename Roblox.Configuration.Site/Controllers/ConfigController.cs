@@ -14,12 +14,13 @@ namespace Roblox.Configuration.Site.Controllers
     [RoutePrefix("Config")]
     public class ConfigController : Controller
     {
+        private ConfigurationClient Client { get { return MvcApplication.ConfigurationClient; } }
 
         // GET: Config/Search
         [HttpGet]
         public ActionResult Search()
         {
-            IEnumerable<string> groupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0);
+            IEnumerable<string> groupNames = Client.GetGroupNames(Properties.Settings.Default.MaxConfigGroupNamesResults, 0);
 
             var viewModel = new ConfigListViewModel
             {
@@ -37,7 +38,7 @@ namespace Roblox.Configuration.Site.Controllers
                 "~/Views/Settings/Table.cshtml",
                 SettingModelFactory.GetSettings(
                     groupName,  // Group name
-                    50,         // Page size
+                    Properties.Settings.Default.MaxSettingsResults,
                     0           // Page number
                 )
             );
@@ -51,7 +52,7 @@ namespace Roblox.Configuration.Site.Controllers
                 "~/Views/ConnectionStrings/Table.cshtml",
                 ConnectionStringModelFactory.GetConnectionStrings(
                     groupName,  // Group name
-                    50,         // Page size
+                    Properties.Settings.Default.MaxConnectionStringResults,
                     0           // Page number
                 )
             );
@@ -66,7 +67,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = (SettingModel)MvcApplication.ConfigurationClient.GetSetting(settingGroupName, settingName);
+            SettingModel settingModel = (SettingModel)Client.GetSetting(settingGroupName, settingName);
             if (settingModel == null)
                 return new HttpNotFoundResult("Setting not found");
             return Json(settingModel, JsonRequestBehavior.AllowGet);
@@ -81,7 +82,7 @@ namespace Roblox.Configuration.Site.Controllers
             else if (string.IsNullOrEmpty(settingName))
                 throw new ArgumentNullException("Name");
 
-            SettingModel settingModel = new SettingModel(MvcApplication.ConfigurationClient.GetMaskedSetting(settingGroupName, settingName));
+            SettingModel settingModel = new SettingModel(Client.GetMaskedSetting(settingGroupName, settingName));
             return Json(settingModel, JsonRequestBehavior.AllowGet);
         }
 
@@ -92,7 +93,7 @@ namespace Roblox.Configuration.Site.Controllers
             if (!id.HasValue)
                 throw new ArgumentNullException("ID");
 
-            SettingModel model = new SettingModel(MvcApplication.ConfigurationClient.GetSetting(id.Value));
+            SettingModel model = new SettingModel(Client.GetSetting(id.Value));
             if (model == null)
                 return new HttpNotFoundResult("Setting with ID " + id + " not found");
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -105,7 +106,7 @@ namespace Roblox.Configuration.Site.Controllers
             if (!id.HasValue)
                 throw new ArgumentNullException("ID");
 
-            ConnectionStringModel model = new ConnectionStringModel(MvcApplication.ConfigurationClient.GetConnectionString(id.Value));
+            ConnectionStringModel model = new ConnectionStringModel(Client.GetConnectionString(id.Value));
             if (model == null)
                 return new HttpNotFoundResult("Connection string with ID " + id + " not found");
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -166,7 +167,7 @@ namespace Roblox.Configuration.Site.Controllers
                 if (!id.HasValue)
                     throw new ArgumentNullException("ID");
 
-                MvcApplication.ConfigurationClient.DeleteSetting(id.Value);
+                Client.DeleteSetting(id.Value);
 
                 // Success
                 return Content("Successfully deleted setting!");
@@ -187,7 +188,7 @@ namespace Roblox.Configuration.Site.Controllers
                 if (!id.HasValue)
                     throw new ArgumentNullException("ID");
 
-                MvcApplication.ConfigurationClient.DeleteConnectionString(id.Value);
+                Client.DeleteConnectionString(id.Value);
 
                 // Success
                 return Content("Successfully deleted connection string!");
@@ -234,16 +235,16 @@ namespace Roblox.Configuration.Site.Controllers
                     // Update setting
                     // TODO: Can we take the non-updates values and pass them in anyways without updating them?
                     // Maybe config service will only use them for identification?
-                    Setting oldSetting = MvcApplication.ConfigurationClient.GetSetting(setting.Id);
+                    Setting oldSetting = Client.GetSetting(setting.Id);
                     setting.GroupName = oldSetting.GroupName;
                     setting.Type = oldSetting.Type;
                     setting.Name = oldSetting.Name;
-                    MvcApplication.ConfigurationClient.SetSetting(setting);
+                    Client.SetSetting(setting);
                 }
                 else
                 {
                     // Create a brand new setting
-                    MvcApplication.ConfigurationClient.CreateSetting(setting);
+                    Client.CreateSetting(setting);
                 }
             }
             catch (Exception ex)
@@ -272,15 +273,15 @@ namespace Roblox.Configuration.Site.Controllers
                     // Update connection string
                     // TODO: Can we take the non-updates values and pass them in anyways without updating them?
                     // Maybe config service will only use them for identification?
-                    ConnectionString oldCS = MvcApplication.ConfigurationClient.GetConnectionString(connectionString.Id);
+                    ConnectionString oldCS = Client.GetConnectionString(connectionString.Id);
                     connectionString.GroupName = oldCS.GroupName;
                     connectionString.Name = oldCS.Name;
-                    MvcApplication.ConfigurationClient.SetConnectionString(connectionString);
+                    Client.SetConnectionString(connectionString);
                 }
                 else
                 {
                     // Create a brand new setting
-                    MvcApplication.ConfigurationClient.CreateConnectionString(connectionString);
+                    Client.CreateConnectionString(connectionString);
                 }
             }
             catch (Exception ex)

@@ -176,6 +176,8 @@
     <Compile Include="Clients\ConfigurationService\SetPropertyRequest.cs" />
     <Compile Include="Clients\ConfigurationService\Setting.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ApiClientsController.cs" />
+    <Compile Include="Controllers\ServicesConfigController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ConnectionStringsController.cs" />
@@ -208,6 +210,7 @@
     <Content Include="Content\Login.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="images\logo.png" />
+    <Content Include="Scripts\Services.js" />
     <Content Include="themes\aristo\Aristo.css" />
     <Content Include="themes\aristo\images\bg_fallback.png" />
     <Content Include="themes\aristo\images\icon_sprite.png" />
@@ -264,7 +267,6 @@
     <Content Include="Views\Shared\PlaceHolder.cshtml" />
     <Content Include="Views\Default\ListConfigurationGroups.cshtml" />
     <Content Include="Views\Config\ConfigGroupElement.cshtml" />
-    <Content Include="Views\Settings\Search.cshtml" />
     <Content Include="Views\Settings\Dialog.cshtml" />
     <Content Include="Views\Settings\Table.cshtml" />
     <Content Include="Views\Settings\Row.cshtml" />
@@ -274,14 +276,23 @@
     <Content Include="Views\ConnectionStrings\Search.cshtml" />
     <Content Include="Views\ConnectionStrings\Table.cshtml" />
     <Content Include="Views\Config\Search.cshtml" />
+    <Content Include="Views\ApiClients\Dialog.cshtml" />
+    <Content Include="Views\ApiClients\Row.cshtml" />
+    <Content Include="Views\ApiClients\Search.cshtml" />
+    <Content Include="Views\ApiClients\Table.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Shared\" />
+    <Folder Include="Views\ServicesConfig\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Assemblies\ApiClientBase\Roblox.ApiClientBase\Roblox.ApiClientBase.csproj">
       <Project>{dae6fab3-f9f4-444a-9235-644d5b97e360}</Project>
       <Name>Roblox.ApiClientBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Assemblies\ApiClients\Roblox.ApiControlPlane.Client\Roblox.ApiControlPlane.Client.csproj">
+      <Project>{dc23218c-86c4-4b9e-9d15-b8a177c6046d}</Project>
+      <Name>Roblox.ApiControlPlane.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Assemblies\Configuration\Roblox.Configuration\Roblox.Configuration.csproj">
       <Project>{6316d070-7193-4f41-9b70-f13d6875563f}</Project>

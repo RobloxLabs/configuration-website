@@ -8,5 +8,20 @@
     <Setting Name="AdminSiteLogoEnabled" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ApiControlPlaneApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">6db364ac-d979-4d50-baa4-9ef68ba1e919</Value>
+    </Setting>
+    <Setting Name="MaxApiClientResults" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MaxConfigGroupNamesResults" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="MaxSettingsResults" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="MaxConnectionStringResults" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
