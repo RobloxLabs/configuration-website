@@ -4,19 +4,29 @@
     <td>@Model.ID</td>
     <td>
         <div class="btn-group">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle-client>Toggle</button>
+            <button type="button" class="btn btn-primary btn-xs rename-client-link" >Rename</button>
             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-                <li>@Html.ActionLink("Rename", "", null, new { href = "#", @class = "rename-client-link" })</li>
                 <li>@Html.ActionLink("Duplicate", "", null, new { href = "#", @class = "duplicate-client-link" })</li>
                 <li>@Html.ActionLink("Remove", "", null, new { href = "#", @class = "remove-client-link" })</li>
             </ul>
         </div>
     </td>
-    <td style="text-align: center;">@Html.DisplayFor(m => m.IsValid)</td>
+    <td style="text-align: center;">
+        <button type="button" class="btn @(Model.IsValid ? "btn-primary" : "btn-default") btn-xs" data-toggle-client data-toggle-value="@(!Model.IsValid)">
+            @if (Model.IsValid)
+            {
+                <span class="glyphicon glyphicon-ok"></span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+        </button>
+    </td>
     <td>@Html.DisplayFor(m => m.Note)</td>
     <td class="reveal-client-key-success"><button type="button" class="btn btn-primary btn-xs reveal-client-key-link" data-id="@Model.ID">Reveal</button></td>
     <td>@Html.DisplayFor(m => m.Created)</td>

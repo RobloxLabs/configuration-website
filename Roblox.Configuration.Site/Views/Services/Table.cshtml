@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IService>
+
+<table id="serviceResults" class="table table-bordered table-hover serviceTable">
+    <thead>
+        <tr>
+            <th>ID <button id="create-new-service-button" class="btn btn-default btn-xs pull-right" title="Create new service"><span class="glyphicon glyphicon-plus"></span></button></th>
+            <th style="width: 70px">Enabled</th>
+            <th>Name</th>
+            <th style="width: 175px">Created</th>
+            <th style="width: 175px">Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.Partial("Row", item)
+        }
+    </tbody>
+</table>

@@ -27,17 +27,30 @@
                     </div>
 
                 <ul class="nav navbar-nav">
-                    <li class="">
+                    <!--li class="">
                         <a href="/system-events">System Events</a>
+                    </!li-->
+                    <li class="dropdown @Html.IsActive("Config")">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                @Html.ActionLink("Groups", "ListGroups", "Config")
+                            </li>
+                            <li>
+                                @Html.ActionLink("Search", "Search", "Config")
+                            </li>
+                        </ul>
                     </li>
-                    <li class="@Html.IsActive("Default", "ListConfigurationGroups")">
-                        @Html.ActionLink("Configuration Groups", "ListConfigurationGroups", controllerName: "Default")
-                    </li>
-                    <li class="@Html.IsActive("Config", "Search")">
-                        @Html.ActionLink("Configuration Search", "Search", "Config")
-                    </li>
-                    <li class="@Html.IsActive("Config")">
-                        @Html.ActionLink("ApiClient Search", "Search", "ApiClients")
+                    <li class="dropdown @Html.IsActive("ApiClients") @Html.IsActive("Services")">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services Configuration <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                @Html.ActionLink("API Clients", "Config", "ApiClients")
+                            </li>
+                            <li>
+                                @Html.ActionLink("Services", "Config", "Services")
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 

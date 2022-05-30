@@ -29,20 +29,17 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Settings Count</th>
-            <th>Connection Strings Count</th>
         </tr>
     </thead>
     <tbody>
         @{
             for (int i = 0; i < Model.Count; i++)
             {
-                @* This shouldn't use a separate partial view unless it's going to be used elsewhere. *@
                 @Html.Partial(
-                    "~/Views/Config/ConfigGroupElement.cshtml",
+                    "GroupElement",
                     new ConfigGroupModel
                     {
-                        Id = i + (Model.PageNumber - 1) * Model.PageSize,
+                        Id = i + 1 + (Model.PageNumber - 1) * Model.PageSize,
                         Name = Model.ElementAt(i)
                     }
                 );
@@ -51,4 +48,4 @@
     </tbody>
 </table>
 
-@Html.PagedListPager(Model, page => Url.Action("ListConfigGroups", new { page }))
+@Html.PagedListPager(Model, page => Url.Action("ListGroups", new { page }))

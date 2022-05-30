@@ -2,7 +2,5 @@
 
 <tr id="configuration-group-@Model.Id" class="configuration-group-row" data-id="@Model.Id" data-url="/ConfigurationGroups/GroupRow/@Model.Id" data-completed-value="False">
     <td>@Model.Id</td>
-    <td>@Model.Name</td>
-    <td><a href="/settings/list?groupName=@Model.Name">(List)</a></td>
-    <td><a href="/connection-strings/list?groupName=@Model.Name">(List)</a></td>
+    <td><a href="@Url.Action("Search")#@Model.Name.ToLower();;">@Model.Name</a></td>
 </tr>

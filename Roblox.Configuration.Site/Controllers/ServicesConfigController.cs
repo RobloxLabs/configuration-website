@@ -102,6 +102,13 @@ namespace Roblox.Configuration.Site.Controllers
             Client.UpdateService(serviceId, serviceName, enableService);
         }
 
+        // POST: ServicesConfig/ToggleService
+        [HttpPost]
+        public void ToggleService(int serviceId, bool enableService)
+        {
+            Client.SetService(serviceId, enableService);
+        }
+
         // POST: ServicesConfig/AddOperation
         [HttpPost]
         public void AddOperation(string operationName, string serviceName)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using Roblox.Configuration.Site.ViewModels.Configuration;
 using Roblox.Configuration.Site.Models.Configuration;
 using Roblox.Configuration.Site.Clients.ConfigurationService;
@@ -15,6 +16,24 @@ namespace Roblox.Configuration.Site.Controllers
     public class ConfigController : Controller
     {
         private ConfigurationClient Client { get { return MvcApplication.ConfigurationClient; } }
+
+        //
+        // GET: /list-groups
+        // Max per page is 25
+
+        [HttpGet]
+        [Route("ListGroups")]
+        [Route("list-groups")]
+        public ActionResult ListGroups(int page = 1)
+        {
+            if (page < 1)
+                page = 1;
+            var pageSize = Properties.Settings.Default.ConfigGroupPageSize;
+
+            var configGroups = Client.GetGroupNames(100, 0);
+
+            return View(configGroups.ToPagedList(page, pageSize));
+        }
 
         // GET: Config/Search
         [HttpGet]

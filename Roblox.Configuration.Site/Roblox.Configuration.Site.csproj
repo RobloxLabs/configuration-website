@@ -181,6 +181,7 @@
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ConnectionStringsController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="ModelFactories\Configuration\SettingModelFactory.cs" />
     <Compile Include="ModelFactories\Configuration\ConnectionStringModelFactory.cs" />
@@ -265,8 +266,8 @@
     <Content Include="Views\Default\Index.cshtml" />
     <Content Include="Views\Testing\PanelTest.cshtml" />
     <Content Include="Views\Shared\PlaceHolder.cshtml" />
-    <Content Include="Views\Default\ListConfigurationGroups.cshtml" />
-    <Content Include="Views\Config\ConfigGroupElement.cshtml" />
+    <Content Include="Views\Config\ListGroups.cshtml" />
+    <Content Include="Views\Config\GroupElement.cshtml" />
     <Content Include="Views\Settings\Dialog.cshtml" />
     <Content Include="Views\Settings\Table.cshtml" />
     <Content Include="Views\Settings\Row.cshtml" />
@@ -278,8 +279,14 @@
     <Content Include="Views\Config\Search.cshtml" />
     <Content Include="Views\ApiClients\Dialog.cshtml" />
     <Content Include="Views\ApiClients\Row.cshtml" />
-    <Content Include="Views\ApiClients\Search.cshtml" />
+    <Content Include="Views\ApiClients\Config.cshtml" />
     <Content Include="Views\ApiClients\Table.cshtml" />
+    <Content Include="Views\Services\Row.cshtml" />
+    <Content Include="Views\Services\Config.cshtml" />
+    <Content Include="Views\Services\Table.cshtml" />
+    <Content Include="Views\Operations\Config.cshtml" />
+    <Content Include="Views\Operations\Row.cshtml" />
+    <Content Include="Views\Operations\Table.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Shared\" />

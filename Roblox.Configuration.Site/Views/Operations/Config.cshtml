@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IService>
+@section scripts {
+    @Scripts.Render("~/Scripts/Services.js")
+    @Styles.Render("~/bundles/config-styles")
+}
+@{
+    ViewBag.Title = "Services Configuration";
+}
+
+
+<div>
+    <span id="service-default-number">@Model.Count() services found.</span>
+    <div id="servicesResultsDiv" class="resultsContainer">
+        @Html.Partial("Table", Model)
+    </div>
+</div>

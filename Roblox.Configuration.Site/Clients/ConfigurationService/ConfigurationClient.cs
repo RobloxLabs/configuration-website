@@ -243,7 +243,7 @@ namespace Roblox.Configuration.Site.Clients.ConfigurationService
         /// <inheritdoc />
         public string[] GetGroupNames(int pageSize, int page)
         {
-            return GetV2<string[]>("/v1/GetGroupNames", ConstructPageRequest(pageSize, page));
+            return GetV2<string[]>("/v1/GetConfigurationGroupNames", ConstructPageRequest(pageSize, page));
         }
         /// <inheritdoc />
         public Setting GetMaskedSetting(string groupName, string settingName)

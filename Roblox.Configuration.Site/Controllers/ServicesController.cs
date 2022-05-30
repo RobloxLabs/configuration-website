@@ -8,15 +8,15 @@ using Roblox.ApiControlPlane.Client;
 namespace Roblox.Configuration.Site.Controllers
 {
     [Authorize]
-    public class ApiClientsController : Controller
+    public class ServicesController : Controller
     {
         private ApiControlPlaneClient Client { get { return MvcApplication.ApiControlPlaneClient; } }
 
-        // GET: ApiClients/Config
+        // GET: Services/Config
         [HttpGet]
         public ActionResult Config()
         {
-            var model = Client.GetApiClients(0, Properties.Settings.Default.MaxApiClientResults);
+            var model = Client.GetServices(0, Properties.Settings.Default.MaxServicesResults);
 
             return View(model);
         }

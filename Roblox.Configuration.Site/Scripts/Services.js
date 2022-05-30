@@ -14,7 +14,7 @@
 
     function warningPrompt(promptToShow, callback) {
         var text = promptToShow + "<br/><br/>Type YES to confirm.";
-        var message = text + `<input class="form-control" id="client-warning-input" name="client-warning-input" type="text">`;
+        var message = text + `<input class="form-control" id="client-warning-input" name="client-warning-input" type="text" />`;
         bootbox.dialog({
             title: "WARNING",
             message: message,
@@ -33,6 +33,26 @@
                             callback();
                         }
                     }
+                }
+            }
+        });
+    }
+
+    function togglePrompt(title, name, value, callback) {
+        bootbox.confirm({
+            title: title,
+            message: "Are you sure you want to set '<b>" + name + "</b>' to '<b>" + value + "</b>'?",
+            buttons: {
+                confirm: {
+                    label: "Confirm"
+                },
+                cancel: {
+                    label: "Cancel"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    callback();
                 }
             }
         });
@@ -235,27 +255,11 @@
     }
 
     $("button[data-toggle-client]").click(function () {
-        var isValid = $(this).closest("tr").data("valid");
+        var isValid = $(this).data("toggle-value");
         var id = $(this).closest("tr").data("id");
         var note = $(this).closest("tr").data("note");
 
-        bootbox.confirm({
-            title: "Toggle Client",
-            message: "Are you sure you want to set '<b>" + note + "</b>' to '<b>" + isValid + "</b>'?",
-            buttons: {
-                confirm: {
-                    label: "Confirm"
-                },
-                cancel: {
-                    label: "Cancel"
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    toggleClient(id, isValid);
-                }
-            }
-        })
+        togglePrompt("Toggle Client", note, isValid, function () { toggleClient(id, isValid); });
     });
 
     function renameClient(isValid, id, newNote) {
@@ -274,7 +278,7 @@
         });
     }
 
-    $("a.rename-client-link").click(function () {
+    $("button.rename-client-link").click(function () {
         var tr = $(this).closest("tr");
         var isValid = tr.data("valid");
         var id = tr.data("id");
@@ -296,69 +300,50 @@
 
 
     ////////////////// services page starts //////////////////////
-    var addServiceDialog = $("#addServiceDialog").dialog({
-        title: "Create New Api Service",
-        modal: true,
-        resizable: false,
-        width: 500,
-        autoOpen: false,
-        buttons: {
-            "Save": function () {
-                var params = {
-                    name: $("#serviceName").val(),
-                };
-
-                $.post("/ServicesConfig/AddService", params, function () {
-                    addServiceDialog.dialog("close");
-                    window.location.reload();
-                });
-            },
-
-            "Cancel": function () {
-                addServiceDialog.dialog("close");
-            }
-        }
-    });
 
     $("#create-new-service-button").click(function () {
-        addServiceDialog.dialog("open");
-    });
+        bootbox.dialog({
+            title: "Create New Api Service",
+            message: `<label for="serviceName">Name: </label><input class="form-control" id="serviceName" name="serviceName" type="text" />`,
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-default"
+                },
+                confirm: {
+                    label: "Save",
+                    className: "btn-primary",
+                    callback: function () {
+                        var params = {
+                            name: $("#serviceName").val(),
+                        };
 
-    var toggleServiceDialog = $("#toggleServiceDialog").dialog({
-        title: "Toggle Service",
-        modal: true,
-        resizable: false,
-        width: 500,
-        autoOpen: false,
-        buttons: {
-            "Confirm": function () {
-                var params = {
-                    serviceId: toggleServiceDialog.data("serviceId"),
-                    serviceName: toggleServiceDialog.data("serviceName"),
-                    enableService: toggleServiceDialog.data("enableService")
-                };
-
-                $.post("/ServicesConfig/UpdateService", params, function () {
-                    toggleServiceDialog.dialog("close");
-                    window.location.reload();
-                });
-            },
-
-            "Cancel": function () {
-                toggleServiceDialog.dialog("close");
+                        $.post("/ServicesConfig/AddService", params, function () {
+                            window.location.reload();
+                        });
+                    }
+                }
             }
-        }
+        });
     });
 
-    $("a[data-toggle-service]").click(function () {
-        var enableService = $(this).text();
+    function toggleService(serviceId, enableService) {
+        var params = {
+            serviceId: serviceId,
+            enableService: enableService
+        };
+
+        $.post("/ServicesConfig/ToggleService", params, function () {
+            window.location.reload();
+        });
+    }
+
+    $("button[data-toggle-service]").click(function () {
+        var enableService = $(this).data("toggle-value");
         var serviceId = $(this).closest("tr").data("id");
         var serviceName = $(this).closest("tr").data("name");
-        toggleServiceDialog.data("enableService", enableService);
-        toggleServiceDialog.data("serviceId", serviceId);
-        toggleServiceDialog.data("serviceName", serviceName);
-        $("#toggleServiceDialog").text("Are you sure you want to set '" + serviceName + "' to '" + enableService + "'?");
-        toggleServiceDialog.dialog("open");
+
+        togglePrompt("Toggle Service", serviceName, enableService, function () { toggleService(serviceId, enableService); });
     });
 
     //////////////// services page ends ////////////////////////////
@@ -389,32 +374,6 @@
         }
     });
 
-    var toggleOperationDialog = $("#toggleOperationDialog").dialog({
-        title: "Toggle Operation",
-        modal: true,
-        resizable: false,
-        width: 500,
-        autoOpen: false,
-        buttons: {
-            "Confirm": function () {
-                var params = {
-                    operationId: toggleOperationDialog.data("operationId"),
-                    operationName: toggleOperationDialog.data("operationName"),
-                    serviceName: toggleOperationDialog.data("serviceName"),
-                    enableOperation: toggleOperationDialog.data("enableOperation")
-                };
-                console.log(params);
-                $.post("/ServicesConfig/UpdateOperation", params, function () {
-                    toggleOperationDialog.dialog("close");
-                    window.location.reload();
-                });
-            },
-            "Cancel": function () {
-                toggleOperationDialog.dialog("close");
-            }
-        }
-    });
-
     $("#create-new-operation-button").click(function () {
         operationDialog.dialog("open");
     });
@@ -441,17 +400,27 @@
         return false;
     });
 
+    function toggleOperation(operationId, operationName, serviceName, enableOperation) {
+        var params = {
+            operationId: operationId,
+            operationName: operationName,
+            serviceName: serviceName,
+            enableOperation: enableOperation
+        };
+        console.log(params);
+        $.post("/ServicesConfig/UpdateOperation", params, function () {
+            toggleOperationDialog.dialog("close");
+            window.location.reload();
+        });
+    }
+
     $("a[data-toggle-operation]").click(function () {
-        var enableOperation = $(this).text();
+        var enableOperation = $(this).data("toggle-value");
         var operationId = $(this).closest("tr").data("id");
         var serviceName = $("#current-service-name").val();
         var operationName = $(this).closest("tr").data("name");
-        toggleOperationDialog.data("enableOperation", enableOperation);
-        toggleOperationDialog.data("operationId", operationId);
-        toggleOperationDialog.data("serviceName", serviceName);
-        toggleOperationDialog.data("operationName", operationName);
-        $("#toggleOperationDialog").text("Are you sure you want to set '" + operationName + "' to '" + enableOperation + "'?");
-        toggleOperationDialog.dialog("open");
+
+        togglePrompt("Toggle Operation", operationName, enableOperation, function () { toggleOperation(operationId, operationName, serviceName, enableOperation); });
     });
 
 
