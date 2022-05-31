@@ -349,33 +349,31 @@
     //////////////// services page ends ////////////////////////////
 
     ///////////// operations page starts ///////////////////
-    var operationDialog = $("#operationDialog").dialog({
-        title: "Create New Operation",
-        modal: true,
-        resizable: false,
-        width: 500,
-        autoOpen: false,
-        buttons: {
-            "Save": function () {
-                var params = {
-                    operationName: $("#operationName").val(),
-                    serviceName: $("#current-service-name").val()
-                };
-
-                $.post("/ServicesConfig/AddOperation", params, function () {
-                    operationDialog.dialog("close");
-                    window.location.reload();
-                });
-            },
-
-            "Cancel": function () {
-                operationDialog.dialog("close");
-            }
-        }
-    });
-
     $("#create-new-operation-button").click(function () {
-        operationDialog.dialog("open");
+        bootbox.dialog({
+            title: "Create New Operation",
+            message: `<label for="operationName">Name: </label><input class="form-control" id="operationName" name="operationName" type="text" />`,
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-default"
+                },
+                confirm: {
+                    label: "Save",
+                    className: "btn-primary",
+                    callback: function () {
+                        var params = {
+                            operationName: $("#operationName").val(),
+                            serviceName: $("#current-service-name").val()
+                        };
+
+                        $.post("/ServicesConfig/AddOperation", params, function () {
+                            window.location.reload();
+                        });
+                    }
+                }
+            }
+        });
     });
 
 
@@ -403,18 +401,15 @@
     function toggleOperation(operationId, operationName, serviceName, enableOperation) {
         var params = {
             operationId: operationId,
-            operationName: operationName,
-            serviceName: serviceName,
             enableOperation: enableOperation
         };
         console.log(params);
-        $.post("/ServicesConfig/UpdateOperation", params, function () {
-            toggleOperationDialog.dialog("close");
+        $.post("/ServicesConfig/ToggleOperation", params, function () {
             window.location.reload();
         });
     }
 
-    $("a[data-toggle-operation]").click(function () {
+    $("button[data-toggle-operation]").click(function () {
         var enableOperation = $(this).data("toggle-value");
         var operationId = $(this).closest("tr").data("id");
         var serviceName = $("#current-service-name").val();

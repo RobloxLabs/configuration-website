@@ -103,5 +103,14 @@ namespace Roblox.Configuration.Site.Properties {
                 return ((int)(this["ConfigGroupPageSize"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int MaxOperationsResults {
+            get {
+                return ((int)(this["MaxOperationsResults"]));
+            }
+        }
     }
 }

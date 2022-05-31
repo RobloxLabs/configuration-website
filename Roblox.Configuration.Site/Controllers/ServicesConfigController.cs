@@ -123,6 +123,13 @@ namespace Roblox.Configuration.Site.Controllers
             Client.UpdateOperation(operationId, operationName, serviceName, enableOperation);
         }
 
+        // POST: ServicesConfig/ToggleOperation
+        [HttpPost]
+        public void ToggleOperation(int operationId, string operationName, string serviceName, bool enableOperation)
+        {
+            Client.SetOperation(operationId, enableOperation);
+        }
+
         // POST: ServicesConfig/DeleteOperation
         [HttpPost]
         public void DeleteOperation(int operationId)

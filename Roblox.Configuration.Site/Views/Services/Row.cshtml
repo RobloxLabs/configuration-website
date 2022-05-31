@@ -1,6 +1,6 @@
 ﻿@model Roblox.ApiControlPlane.Client.IService
 
-<tr class="client-row" data-id="@Model.ID" data-name="@Model.Name" data-enabled="@Model.IsEnabled">
+<tr class="service-row" data-id="@Model.ID" data-name="@Model.Name" data-enabled="@Model.IsEnabled">
     <td>@Model.ID</td>
     <td style="text-align: center;">
         <button type="button" class="btn @(Model.IsEnabled ? "btn-primary" : "btn-default") btn-xs" data-toggle-service data-toggle-value="@(!Model.IsEnabled)">
@@ -15,6 +15,13 @@
         </button>
     </td>
     <td>@Html.DisplayFor(m => m.Name)</td>
+    <td>@Html.ActionLink(
+            linkText: "(List)",
+            actionName: "Config",
+            controllerName: "Operations",
+            routeValues: new { serviceName = Model.Name },
+            htmlAttributes: null
+        )</td>
     <td>@Html.DisplayFor(m => m.Created)</td>
     <td>@Html.DisplayFor(m => m.Updated)</td>
 </tr>

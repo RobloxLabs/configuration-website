@@ -1,9 +1,9 @@
-﻿@model Roblox.ApiControlPlane.Client.IService
+﻿@model Roblox.ApiControlPlane.Client.IOperation
 
-<tr class="client-row" data-id="@Model.ID" data-name="@Model.Name" data-enabled="@Model.IsEnabled">
+<tr class="operation-row" data-id="@Model.ID" data-name="@Model.Name" data-enabled="@Model.IsEnabled">
     <td>@Model.ID</td>
     <td style="text-align: center;">
-        <button type="button" class="btn @(Model.IsEnabled ? "btn-primary" : "btn-default") btn-xs" data-toggle-service data-toggle-value="@(!Model.IsEnabled)">
+        <button type="button" class="btn @(Model.IsEnabled ? "btn-primary" : "btn-default") btn-xs" data-toggle-operation data-toggle-value="@(!Model.IsEnabled)">
             @if (Model.IsEnabled)
             {
                 <span class="glyphicon glyphicon-ok"></span>

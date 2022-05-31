@@ -181,6 +181,7 @@
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ConnectionStringsController.cs" />
+    <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="ModelFactories\Configuration\SettingModelFactory.cs" />

@@ -1,16 +1,17 @@
-﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IService>
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IOperation>
 @section scripts {
     @Scripts.Render("~/Scripts/Services.js")
     @Styles.Render("~/bundles/config-styles")
 }
 @{
-    ViewBag.Title = "Services Configuration";
+    ViewBag.Title = "Operation Configuration";
 }
 
-
+@Html.Hidden("current-service-name", (string)ViewBag.CurrentServiceName)
 <div>
-    <span id="service-default-number">@Model.Count() services found.</span>
-    <div id="servicesResultsDiv" class="resultsContainer">
+    <h3>@ViewBag.CurrentServiceName Operations</h3>
+    <span id="operations-default-number">@Model.Count() operations found.</span>
+    <div id="operationsResultsDiv" class="resultsContainer">
         @Html.Partial("Table", Model)
     </div>
 </div>
