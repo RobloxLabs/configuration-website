@@ -29,6 +29,13 @@
     </td>
     <td>@Html.DisplayFor(m => m.Note)</td>
     <td class="reveal-client-key-success"><button type="button" class="btn btn-primary btn-xs reveal-client-key-link" data-id="@Model.ID">Reveal</button></td>
+    <td class="authorization-column"><span>@Html.ActionLink(
+        linkText: "?",
+        actionName: "Config",
+        controllerName: "ServiceAuthorizations",
+        routeValues: new { clientId = Model.ID },
+        htmlAttributes: null
+    )</span></td>
     <td>@Html.DisplayFor(m => m.Created)</td>
     <td>@Html.DisplayFor(m => m.Updated)</td>
 </tr>

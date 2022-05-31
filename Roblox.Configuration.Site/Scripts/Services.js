@@ -464,12 +464,12 @@
         });
     }
 
-    $("a[data-change-service-authorization]").click(function () {
+    $("button[data-change-service-authorization]").click(function () {
         var tr = $(this).closest("tr");
         var serviceName = tr.data("service-name");
-        var authorizationType = $(this).text();
+        var authorizationType = tr.data("authorization-type");
         var key = $("#clientKey").val();
-        warningPrompt("Are you sure you want to change authorization of '" + serviceName + "' to '" + authorizationType + "'? Please note that changing authorization to 'None' will delete it.",
+        warningPrompt("Are you sure you want to change authorization of '<b>" + serviceName + "</b>' to '<b>" + authorizationType + "</b>'? Please note that changing authorization to 'None' will delete it.",
             function () { addServiceAuthorization(key, serviceName, authorizationType); }
         );
         return false;

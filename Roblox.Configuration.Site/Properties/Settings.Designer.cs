@@ -112,5 +112,14 @@ namespace Roblox.Configuration.Site.Properties {
                 return ((int)(this["MaxOperationsResults"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int MaxClientAuthorizationsResults {
+            get {
+                return ((int)(this["MaxClientAuthorizationsResults"]));
+            }
+        }
     }
 }

@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IAuthorization>
+
+<button id="create-new-service-authorization-button" class="btn btn-default btn-xs" title="Create new service authorization">Add Authorization</button>
+<table id="serviceAuthorizationResults" class="table table-bordered table-hover serviceAuthorizationTable">
+    <thead>
+        <tr>
+            <th>Service</th>
+            <th>Authorization Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.Partial("Row", item)
+        }
+    </tbody>
+</table>

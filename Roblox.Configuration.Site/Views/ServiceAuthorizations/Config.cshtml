@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Roblox.ApiControlPlane.Client.IAuthorization>
+@section scripts {
+    @Scripts.Render("~/Scripts/Services.js")
+    @Styles.Render("~/bundles/config-styles")
+}
+@{
+    ViewBag.Title = "Service Authorization Configuration";
+}
+
+@Html.Hidden("clientKey", (string)ViewBag.ClientKey)
+<div>
+    <h3>@ViewBag.CurrentClientName Operations</h3>
+    <span id="operations-default-number">@Model.Count() service authorizations found.</span>
+    <div id="operationsResultsDiv" class="resultsContainer">
+        @Html.Partial("Table", Model)
+    </div>
+</div>
+
+@Html.Partial("Dialog")

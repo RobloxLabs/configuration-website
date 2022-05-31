@@ -177,6 +177,7 @@
     <Compile Include="Clients\ConfigurationService\Setting.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiClientsController.cs" />
+    <Compile Include="Controllers\ServiceAuthorizationsController.cs" />
     <Compile Include="Controllers\ServicesConfigController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
@@ -288,6 +289,10 @@
     <Content Include="Views\Operations\Config.cshtml" />
     <Content Include="Views\Operations\Row.cshtml" />
     <Content Include="Views\Operations\Table.cshtml" />
+    <Content Include="Views\ServiceAuthorizations\Config.cshtml" />
+    <Content Include="Views\ServiceAuthorizations\Row.cshtml" />
+    <Content Include="Views\ServiceAuthorizations\Table.cshtml" />
+    <Content Include="Views\ServiceAuthorizations\Dialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Shared\" />

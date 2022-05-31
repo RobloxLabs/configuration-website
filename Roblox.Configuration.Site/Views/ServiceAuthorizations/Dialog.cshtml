@@ -1,0 +1,16 @@
+﻿
+<div id="serviceAuthorizationDialog" class="configDialog">
+    <table id="dialogFieldTable">
+        <tbody>
+            <tr><td>@Html.Label("serviceName", "Service Name: ")</td><td>@Html.TextBox("serviceName")</td></tr>
+            <tr><td>@Html.Label("authorizationType", "Authorization Type: ")</td>
+                <td>
+                    <select name="authorizationType" id="authorizationType">
+                        <option value="None">None</option>
+                        <option value="Full">Full</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -226,9 +226,11 @@
     text-align: center;
 }
 
-.authorization-column span.selected {
+.authorization-column span.selected,
+.authorization-column span:hover {
     font-weight: bold;
-    background-color: #EDEDED;
+    /*background-color: #EDEDED;*/
+    background-color: #1e1e1e;
     border-radius: 4px;
 }
 /** styles for services config pages end ***/
