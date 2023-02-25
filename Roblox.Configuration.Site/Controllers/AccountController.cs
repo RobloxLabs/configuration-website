@@ -1,7 +1,7 @@
-﻿using System.Security.Principal;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Security;
+using System.Security.Principal;
+using Roblox.ActiveDirectory;
 using Roblox.Configuration.Site.ViewModels;
 
 namespace Roblox.Configuration.Site.Controllers
@@ -63,13 +63,13 @@ namespace Roblox.Configuration.Site.Controllers
 
             userName = GetUsername(userName);
 
-            /*if (ActiveDirectoryAccessVerifier.VerifyActiveDirectoryPassword(userName, password, global::Roblox.Configuration.Site.Properties.Settings.Default.ActiveDirectoryDomain))
+            if (ActiveDirectoryAccessVerifier.VerifyActiveDirectoryPassword(userName, password, global::Roblox.Configuration.Site.Properties.Settings.Default.ActiveDirectoryDomain))
             {
                 FormsAuthentication.SetAuthCookie(userName.ToLower(), true);
                 AuthenticateThisRequest();
 
                 return Redirect(returnUrl);
-            }*/
+            }
 
             return ShowError("Invalid username or password.", returnUrl);
         }

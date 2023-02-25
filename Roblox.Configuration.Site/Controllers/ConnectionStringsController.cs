@@ -1,23 +1,28 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
+using Roblox.Configuration.Client;
 using Roblox.Configuration.Site.ViewModels.Configuration;
 
 namespace Roblox.Configuration.Site.Controllers
 {
     [Authorize]
     [RoutePrefix("ConnectionStrings")]
-    //[RoutePrefix("connection-strings")]
     public class ConnectionStringsController : Controller
     {
+        private readonly IConfigurationClient _ConfigurationClient;
+
+        public ConnectionStringsController(IConfigurationClient configurationClient)
+        {
+            _ConfigurationClient = configurationClient ?? throw new ArgumentNullException(nameof(configurationClient));
+        }
+
         // GET: ConnectionStrings/Search
         [HttpGet]
-        //[Route("list")]
         public ActionResult Search()
         {
             var viewModel = new ConfigListViewModel
             {
-                ConfigGroupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0)
+                ConfigGroupNames = _ConfigurationClient.GetConfigurationGroupNames()
             };
 
             return View(viewModel);

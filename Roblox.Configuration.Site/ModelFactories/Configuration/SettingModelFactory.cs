@@ -1,27 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
+using System.Collections.Generic;
+using Roblox.Configuration.Client;
 using Roblox.Configuration.Site.Models.Configuration;
 
 namespace Roblox.Configuration.Site.ModelFactories.Configuration
 {
     public class SettingModelFactory
     {
-        public static IEnumerable<SettingModel> GetSettings(string groupName, int pageSize, int page)
+        private readonly IConfigurationClient _ConfigurationClient;
+
+        public SettingModelFactory(IConfigurationClient configurationClient)
         {
-            IEnumerable<Setting> settings = Enumerable.Empty<Setting>();
-            List<SettingModel> settingModels = new List<SettingModel>();
+            _ConfigurationClient = configurationClient ?? throw new ArgumentNullException(nameof(configurationClient));
+        }
+
+        
+        public IEnumerable<SettingModel> GetSettings(string groupName, int pageSize, int page)
+        {
+            var settings = Enumerable.Empty<Client.ISetting>();
+            var settingModels = new List<SettingModel>();
 
             if (!string.IsNullOrEmpty(groupName))
-                settings = MvcApplication.ConfigurationClient.GetSettings(
+                settings = _ConfigurationClient.GetSettings(
                     groupName,  // Group name
                     pageSize,         // Page size
                     page           // Page number
                 );
 
-            foreach (Setting setting in settings)
+            foreach (var setting in settings)
             {
                 settingModels.Add(new SettingModel(setting));
             }

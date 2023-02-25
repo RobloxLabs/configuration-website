@@ -1,27 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
+using System.Collections.Generic;
+using Roblox.Configuration.Client;
 using Roblox.Configuration.Site.Models.Configuration;
 
 namespace Roblox.Configuration.Site.ModelFactories.Configuration
 {
     public class ConnectionStringModelFactory
     {
-        public static IEnumerable<ConnectionStringModel> GetConnectionStrings(string groupName, int pageSize, int page)
+        private readonly IConfigurationClient _ConfigurationClient;
+
+        public ConnectionStringModelFactory(IConfigurationClient configurationClient)
         {
-            IEnumerable<ConnectionString> connectionStrings = Enumerable.Empty<ConnectionString>();
-            List<ConnectionStringModel> csModels = new List<ConnectionStringModel>();
+            _ConfigurationClient = configurationClient ?? throw new ArgumentNullException(nameof(configurationClient));
+        }
+
+        public IEnumerable<ConnectionStringModel> GetConnectionStrings(string groupName, int pageSize, int page)
+        {
+            var connectionStrings = Enumerable.Empty<Client.IConnectionString>();
+            var csModels = new List<ConnectionStringModel>();
 
             if (!string.IsNullOrEmpty(groupName))
-                connectionStrings = MvcApplication.ConfigurationClient.GetConnectionStrings(
+                connectionStrings = _ConfigurationClient.GetConnectionStrings(
                     groupName,  // Group name
                     pageSize,   // Page size
                     page        // Page number
                 );
 
-            foreach (ConnectionString cs in connectionStrings)
+            foreach (var cs in connectionStrings)
             {
                 csModels.Add(new ConnectionStringModel(cs));
             }

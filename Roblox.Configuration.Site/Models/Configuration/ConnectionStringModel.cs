@@ -1,5 +1,5 @@
 ﻿using System;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
+using Roblox.Configuration.Client;
 
 namespace Roblox.Configuration.Site.Models.Configuration
 {
@@ -12,7 +12,7 @@ namespace Roblox.Configuration.Site.Models.Configuration
             Updated = DateTime.MinValue;
         }
 
-        public ConnectionStringModel(ConnectionString cs)
+        public ConnectionStringModel(Client.IConnectionString cs)
         {
             Id = cs.Id;
             GroupName = cs.GroupName;

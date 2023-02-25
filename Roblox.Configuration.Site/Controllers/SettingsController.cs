@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
+using Roblox.Configuration.Client;
 using Roblox.Configuration.Site.ViewModels.Configuration;
 
 namespace Roblox.Configuration.Site.Controllers
@@ -10,6 +10,13 @@ namespace Roblox.Configuration.Site.Controllers
     //[RoutePrefix("settings")]
     public class SettingsController : Controller
     {
+        private readonly IConfigurationClient _ConfigurationClient;
+
+        public SettingsController(IConfigurationClient configurationClient)
+        {
+            _ConfigurationClient = configurationClient ?? throw new ArgumentNullException(nameof(configurationClient));
+        }
+
         // GET: Settings/Search
         [HttpGet]
         //[Route("list")]
@@ -17,7 +24,7 @@ namespace Roblox.Configuration.Site.Controllers
         {
             var viewModel = new ConfigListViewModel
             {
-                ConfigGroupNames = MvcApplication.ConfigurationClient.GetGroupNames(50, 0)
+                ConfigGroupNames = _ConfigurationClient.GetConfigurationGroupNames()
             };
 
             return View(viewModel);
