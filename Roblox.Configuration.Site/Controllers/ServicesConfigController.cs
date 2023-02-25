@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Roblox.EventLog;
 using Roblox.ApiControlPlane.Client;
 
 namespace Roblox.Configuration.Site.Controllers
@@ -11,7 +12,14 @@ namespace Roblox.Configuration.Site.Controllers
     [RoutePrefix("ServicesConfig")]
     public class ServicesConfigController : Controller
     {
-        private ApiControlPlaneClient Client { get { return MvcApplication.ApiControlPlaneClient; } }
+        private readonly ILogger _Logger;
+        private readonly IApiControlPlaneClient _ApiControlPlaneClient;
+
+        public ServicesConfigController(ILogger logger, IApiControlPlaneClient apiControlPlaneClient)
+        {
+            _Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _ApiControlPlaneClient = apiControlPlaneClient ?? throw new ArgumentNullException(nameof(apiControlPlaneClient));
+        }
 
 
         // GET: ServicesConfig/GenerateGuid
@@ -29,14 +37,17 @@ namespace Roblox.Configuration.Site.Controllers
             if (!string.IsNullOrEmpty(key) && !Guid.TryParse(key, out guidKey))
                 throw new ArgumentException("Key isn't a valid GUID");
 
-            Client.AddClient(guidKey != Guid.Empty ? guidKey : (Guid?)null, note);
+            _ApiControlPlaneClient.AddClient(
+                key: guidKey != Guid.Empty ? guidKey : (Guid?)null,
+                note: note
+            );
         }
 
         // POST: ServicesConfig/RemoveClient
         [HttpPost]
         public void RemoveClient(int id)
         {
-            Client.RemoveClient(id);
+            _ApiControlPlaneClient.RemoveClient(id: id);
         }
 
         // POST: ServicesConfig/DuplicateClient
@@ -47,14 +58,14 @@ namespace Roblox.Configuration.Site.Controllers
             if (!Guid.TryParse(key, out guidKey))
                 throw new ArgumentException("Key isn't a valid GUID");
 
-            Client.DuplicateClient(id, guidKey, note);
+            _ApiControlPlaneClient.DuplicateClient(id: id, key: guidKey, note: note);
         }
 
         // GET: ServicesConfig/RevealClientKey
         [HttpGet]
         public ActionResult RevealClientKey(int clientId)
         {
-            var apiClient = Client.GetApiClient(clientId);
+            var apiClient = _ApiControlPlaneClient.GetApiClient(id: clientId);
 
             return Content(apiClient.Key.ToString());
         }
@@ -66,7 +77,7 @@ namespace Roblox.Configuration.Site.Controllers
             Guid key;
             if (Guid.TryParse(clientKey, out key))
             {
-                var client = Client.GetApiClientByKey(key);
+                var client = _ApiControlPlaneClient.GetApiClientByKey(key: key);
                 if (client != null)
                     return Json(new int[] { client.ID }, JsonRequestBehavior.AllowGet);
             }
@@ -78,84 +89,89 @@ namespace Roblox.Configuration.Site.Controllers
         [HttpPost]
         public void UpdateClient(bool isValid, int id, string note, Guid key)
         {
-            Client.UpdateClient(id, note, key, isValid);
+            _ApiControlPlaneClient.UpdateClient(
+                id: id,
+                isValid: isValid,
+                note: note,
+                key: key
+            );
         }
 
         // POST: ServicesConfig/ToggleClient
         [HttpPost]
         public void ToggleClient(bool isValid, int id)
         {
-            Client.SetClient(id, isValid);
+            _ApiControlPlaneClient.UpdateClient(id: id, isValid: isValid);
         }
 
         // POST: ServicesConfig/AddService
         [HttpPost]
         public void AddService(string name)
         {
-            Client.AddService(name);
+            _ApiControlPlaneClient.AddService(name: name);
         }
 
         // POST: ServicesConfig/UpdateService
         [HttpPost]
         public void UpdateService(int serviceId, string serviceName, bool enableService)
         {
-            Client.UpdateService(serviceId, serviceName, enableService);
+            _ApiControlPlaneClient.UpdateService(serviceId: serviceId, serviceName: serviceName, enableService: enableService);
         }
 
         // POST: ServicesConfig/ToggleService
         [HttpPost]
         public void ToggleService(int serviceId, bool enableService)
         {
-            Client.SetService(serviceId, enableService);
+            _ApiControlPlaneClient.UpdateService(serviceId: serviceId, enableService: enableService);
         }
 
         // POST: ServicesConfig/AddOperation
         [HttpPost]
         public void AddOperation(string operationName, string serviceName)
         {
-            Client.AddOperation(operationName, serviceName);
+            _ApiControlPlaneClient.AddOperation(operationName: operationName, serviceName: serviceName);
         }
 
         // POST: ServicesConfig/UpdateOperation
         [HttpPost]
         public void UpdateOperation(int operationId, string operationName, string serviceName, bool enableOperation)
         {
-            Client.UpdateOperation(operationId, operationName, serviceName, enableOperation);
+            _ApiControlPlaneClient.UpdateOperation(operationId: operationId, operationName: operationName, serviceName: serviceName, enableOperation: enableOperation);
         }
 
         // POST: ServicesConfig/ToggleOperation
         [HttpPost]
         public void ToggleOperation(int operationId, string operationName, string serviceName, bool enableOperation)
         {
-            Client.SetOperation(operationId, enableOperation);
+            _ApiControlPlaneClient.UpdateOperation(operationId: operationId, enableOperation: enableOperation);
         }
 
         // POST: ServicesConfig/DeleteOperation
         [HttpPost]
         public void DeleteOperation(int operationId)
         {
-            Client.DeleteOperation(operationId);
+            _ApiControlPlaneClient.DeleteOperation(operationId: operationId);
         }
 
         // POST: ServicesConfig/AddServiceAuthorization
         [HttpPost]
         public void AddServiceAuthorization(Guid key, string serviceName, string authorizationType)
         {
-            Client.AddServiceAuthorization(key, serviceName, authorizationType);
+            _ApiControlPlaneClient.AddServiceAuthorization(key: key, serviceName: serviceName, authorizationType: authorizationType);
         }
 
         // POST: ServicesConfig/AddOperationAuthorization
         [HttpPost]
         public void AddOperationAuthorization(Guid key, string serviceName, string operationName, string authorizationType)
         {
-            Client.AddOperationAuthorization(key, serviceName, operationName, authorizationType);
+            _ApiControlPlaneClient.AddOperationAuthorization(key: key, serviceName: serviceName, operationName: operationName, authorizationType: authorizationType);
         }
 
         // GET: ServicesConfig/GetOperations
         [HttpGet]
         public ActionResult GetOperations(string serviceName)
         {
-            var operations = Client.GetOperationsByService(serviceName, 0, 200);
+            var operations = _ApiControlPlaneClient.GetOperationsByService(serviceName: serviceName, startRowIndex: 0, maxRows: 200);
 
             return Json(operations);
         }

@@ -7,8 +7,8 @@ using Unity.Mvc5;
 using Roblox.EventLog;
 using Roblox.Configuration.Client;
 using Roblox.Configuration.Site.ModelFactories.Configuration;
-using Roblox.Configuration.Site.Clients.ConfigurationService;
 using Roblox.ApiControlPlane.Client;
+using Roblox.Configuration.Site.Implementation;
 
 namespace Roblox.Configuration.Site
 {
@@ -22,12 +22,6 @@ namespace Roblox.Configuration.Site
 
             if (ex is not HttpException)
                 Logger?.Error(ex);
-        }
-
-        private static ApiControlPlaneClient _ApiControlPlaneClient;
-        public static ApiControlPlaneClient ApiControlPlaneClient
-        {
-            get { return _ApiControlPlaneClient; }
         }
 
         protected void Application_Start()
@@ -44,16 +38,9 @@ namespace Roblox.Configuration.Site
                 LogToConsole = false
             };
 
-            var serviceUri = global::Roblox.Configuration.Site.Properties.Settings.Default.ConfigurationServiceUrl;
-            var serviceApiKey = global::Roblox.Configuration.Site.Properties.Settings.Default.ConfigurationServiceApiKey;
-
-            var configurationClient = new ConfigurationClient(
-                () => !string.IsNullOrEmpty(serviceUri) ? serviceUri : RobloxEnvironment.GetInternalApiServiceEndpoint("configuration"),
-                !string.IsNullOrEmpty(serviceApiKey) ? () => serviceApiKey : null
-            );
-
             container.RegisterInstance<ILogger>(Logger);
-            container.RegisterInstance<IConfigurationClient>(configurationClient);
+            container.RegisterInstance<IConfigurationClient>(ApiServiceClientFactory.GetConfigurationClient());
+            container.RegisterInstance<IApiControlPlaneClient>(ApiServiceClientFactory.GetApiControlPlaneClient());
             container.RegisterType<ConnectionStringModelFactory>();
             container.RegisterType<SettingModelFactory>();
 

@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
 using System.Security.Principal;
-using Roblox.ActiveDirectory;
+//using Roblox.ActiveDirectory;
 using Roblox.Configuration.Site.ViewModels;
 
 namespace Roblox.Configuration.Site.Controllers
@@ -61,7 +61,7 @@ namespace Roblox.Configuration.Site.Controllers
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
                 return ShowError("Please fill out all fields.", returnUrl);
 
-            userName = GetUsername(userName);
+            /*userName = GetUsername(userName);
 
             if (ActiveDirectoryAccessVerifier.VerifyActiveDirectoryPassword(userName, password, global::Roblox.Configuration.Site.Properties.Settings.Default.ActiveDirectoryDomain))
             {
@@ -69,7 +69,7 @@ namespace Roblox.Configuration.Site.Controllers
                 AuthenticateThisRequest();
 
                 return Redirect(returnUrl);
-            }
+            }*/
 
             return ShowError("Invalid username or password.", returnUrl);
         }
